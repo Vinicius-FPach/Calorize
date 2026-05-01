@@ -90,5 +90,9 @@ function db:populate {
     docker compose exec php php database/Populate/populate.php
 }
 
+function tw {
+    docker compose exec -it php tailwindcss -i ./public/assets/css/style.css -o ./public/assets/css/output.css --watch
+}
+
 TIMEFORMAT=$'\nTask completed in %3lR'
 time ${@}

@@ -1,24 +1,24 @@
-<div class="d-flex">
-    <div>
-        <img id="image_preview" class="avatar rounded img-thumbnail" src="<?= $this->current_user->avatar()->path() ?>" alt="avatar">
+<div class="flex gap-8">
+    <div class="flex flex-col items-center gap-2">
+        <img id="image_preview" class="w-48 h-48 rounded-lg object-cover border border-gray-200" src="<?= $this->current_user->avatar()->path() ?>" alt="avatar">
 
         <form action="<?= route('profile.avatar') ?>" method="POST" enctype="multipart/form-data">
-            <input id="image_preview_input" type="file" name="user_avatar" id="user_avatar">
-            <div class="d-grid mt-2">
-                <button id="image_preview_submit" type="submit" class="btn btn-fill btn-primary">Atualizar</button>
+            <input id="image_preview_input" type="file" name="user_avatar">
+            <div class="mt-2">
+                <button id="image_preview_submit" type="submit" class="w-full px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 cursor-pointer">
+                    Atualizar
+                </button>
             </div>
         </form>
-
     </div>
-    <div class="mx-5">
-        <div class="rounded">
-            <h3><?= $this->current_user->name ?></h3>
-            <span class="text-primary">Estudante de Sistema para Internet</span>
+
+    <div>
+        <div class="mb-3">
+            <h3 class="text-xl font-semibold text-gray-800"><?= $this->current_user->name ?></h3>
+            <span class="text-blue-600 text-sm">Estudante de Sistema para Internet</span>
         </div>
-        <ul class="list-unstyled mt-2">
-            <li>
-                <span>Email: <?= $this->current_user->email ?></span>
-            </li>
+        <ul class="mt-2 space-y-1 text-sm text-gray-700">
+            <li>Email: <?= $this->current_user->email ?></li>
         </ul>
     </div>
 </div>
