@@ -105,7 +105,6 @@ curl -H "Accept: application/json" -b "PHPSESSID=5f55f364a48d87fb7ef9f18425a8ae8
 ### Tailwind
 
 ```shell
-npm install
-npm run dev
+./run tw
 ```
 
