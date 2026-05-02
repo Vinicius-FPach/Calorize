@@ -4,14 +4,20 @@ use App\Controllers\AuthenticationsController;
 use App\Controllers\ProblemsController;
 use App\Controllers\ProfileController;
 use App\Controllers\ReinforceProblemsController;
+use App\Controllers\AdminController;
+use App\Controllers\HomeController;
 use Core\Router\Route;
 
 // Authentication
 Route::get('/login', [AuthenticationsController::class, 'new'])->name('users.login');
 Route::post('/login', [AuthenticationsController::class, 'authenticate'])->name('users.authenticate');
 
+Route::middleware('admin')->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+});
+
 Route::middleware('auth')->group(function () {
-    Route::get('/', [ProblemsController::class, 'index'])->name('root');
+    Route::get('/', [HomeController::class, 'index'])->name('root');
 
     // Create
     Route::get('/problems/new', [ProblemsController::class, 'new'])->name('problems.new');

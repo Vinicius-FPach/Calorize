@@ -14,16 +14,26 @@ use Core\Database\ActiveRecord\Model;
  * @property string $email
  * @property string $encrypted_password
  * @property string $avatar_name
+ * @property bool $is_admin
  * @property Problem[] $problems
  * @property Problem[] $reinforced_problems
  */
 class User extends Model
 {
     protected static string $table = 'users';
-    protected static array $columns = ['name', 'email', 'encrypted_password', 'avatar_name'];
+    protected static array $columns = ['name', 'email', 'encrypted_password', 'avatar_name', 'is_admin'];
 
     protected ?string $password = null;
     protected ?string $password_confirmation = null;
+
+    public function __construct($params = [])
+    {
+        parent::__construct($params);
+
+        if ($this->is_admin === null) {
+            $this->is_admin = 0;
+        }
+    }
 
     public function problems(): HasMany
     {
