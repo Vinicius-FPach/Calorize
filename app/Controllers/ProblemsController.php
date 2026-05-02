@@ -13,7 +13,7 @@ class ProblemsController extends Controller
         $paginator = $this->current_user->problems()->paginate(page: $request->getParam('page', 1));
         $problems = $paginator->registers();
 
-        $title = 'Problemas Registrados';
+        $title = 'Dietas Registradas';
 
         if ($request->acceptJson()) {
             $this->renderJson('problems/index', compact('paginator', 'problems', 'title'));
@@ -28,7 +28,7 @@ class ProblemsController extends Controller
 
         $problem = $this->current_user->problems()->findById($params['id']);
 
-        $title = "Visualização do Problema #{$problem->id}";
+        $title = "Visualização da dieta #{$problem->id}";
         $this->render('problems/show', compact('problem', 'title'));
     }
 
@@ -36,7 +36,7 @@ class ProblemsController extends Controller
     {
         $problem = $this->current_user->problems()->new();
 
-        $title = 'Novo Problema';
+        $title = 'Nova dieta';
         $this->render('problems/new', compact('problem', 'title'));
     }
 
@@ -46,11 +46,11 @@ class ProblemsController extends Controller
         $problem = $this->current_user->problems()->new($params['problem']);
 
         if ($problem->save()) {
-            FlashMessage::success('Problema registrado com sucesso!');
+            FlashMessage::success('Dieta registrada com sucesso!');
             $this->redirectTo(route('problems.index'));
         } else {
             FlashMessage::danger('Existem dados incorretos! Por verifique!');
-            $title = 'Novo Problema';
+            $title = 'Nova dieta';
             $this->render('problems/new', compact('problem', 'title'));
         }
     }
@@ -60,7 +60,7 @@ class ProblemsController extends Controller
         $params = $request->getParams();
         $problem = $this->current_user->problems()->findById($params['id']);
 
-        $title = "Editar Problema #{$problem->id}";
+        $title = "Editar dieta #{$problem->id}";
         $this->render('problems/edit', compact('problem', 'title'));
     }
 
@@ -73,11 +73,11 @@ class ProblemsController extends Controller
         $problem->title = $params['title'];
 
         if ($problem->save()) {
-            FlashMessage::success('Problema atualizado com sucesso!');
+            FlashMessage::success('Dieta atualizada com sucesso!');
             $this->redirectTo(route('problems.index'));
         } else {
             FlashMessage::danger('Existem dados incorretos! Por verifique!');
-            $title = "Editar Problema #{$problem->id}";
+            $title = "Editar Dieta #{$problem->id}";
             $this->render('problems/edit', compact('problem', 'title'));
         }
     }
@@ -89,7 +89,7 @@ class ProblemsController extends Controller
         $problem = $this->current_user->problems()->findById($params['id']);
         $problem->destroy();
 
-        FlashMessage::success('Problema removido com sucesso!');
+        FlashMessage::success('Dieta removida com sucesso!');
         $this->redirectTo(route('problems.index'));
     }
 }
