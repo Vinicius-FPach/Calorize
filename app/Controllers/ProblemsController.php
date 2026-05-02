@@ -60,7 +60,7 @@ class ProblemsController extends Controller
         $params = $request->getParams();
         $problem = $this->current_user->problems()->findById($params['id']);
 
-        $title = "Editar dieta #{$problem->id}";
+        $title = "Editar Dieta #{$problem->id}";
         $this->render('problems/edit', compact('problem', 'title'));
     }
 
