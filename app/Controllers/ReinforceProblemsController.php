@@ -15,7 +15,7 @@ class ReinforceProblemsController extends Controller
         $paginator = Problem::paginate(page: $request->getParam('page', 1), route: 'reinforce.problems.paginate');
         $problems = $paginator->registers();
 
-        $title = 'Todos Problemas';
+        $title = 'Todas as dietas';
 
         $this->render('reinforce_problems/index', compact('paginator', 'problems', 'title'));
     }
@@ -23,7 +23,7 @@ class ReinforceProblemsController extends Controller
     public function supported(): void
     {
         $problems = $this->current_user->reinforced_problems;
-        $title = 'Problemas Suportados';
+        $title = 'Alimentos Aprovados';
 
         $this->render('reinforce_problems/supported', compact('problems', 'title'));
     }
