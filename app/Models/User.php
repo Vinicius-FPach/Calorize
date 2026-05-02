@@ -14,7 +14,7 @@ use Core\Database\ActiveRecord\Model;
  * @property string $email
  * @property string $encrypted_password
  * @property string $avatar_name
- * @property bool $is_admin
+ * @property int $is_admin
  * @property Problem[] $problems
  * @property Problem[] $reinforced_problems
  */
