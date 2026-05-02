@@ -20,13 +20,25 @@ class AuthenticationsController extends Controller
     public function authenticate(Request $request): void
     {
         $params = $request->getParam('user');
+
+        if (empty($params['email']) || empty($params['password'])) {
+            FlashMessage::danger('Email e senha são obrigatórios!');
+            $this->redirectTo(route('users.login'));
+            return;
+        }
+
         $user = User::findByEmail($params['email']);
 
         if ($user && $user->authenticate($params['password'])) {
             Auth::login($user);
 
             FlashMessage::success('Login realizado com sucesso!');
-            $this->redirectTo(route('problems.index'));
+
+            if ($user->is_admin) {
+                $this->redirectTo(route('admin.index'));
+            } else {
+                $this->redirectTo(route('problems.index'));
+            }
         } else {
             FlashMessage::danger('Email e/ou senha inválidos!');
             $this->redirectTo(route('users.login'));

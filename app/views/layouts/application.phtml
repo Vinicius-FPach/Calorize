@@ -11,7 +11,7 @@
 
 <body class="mt-15 bg-gray-50">
     <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-black/10 h-15 flex items-center px-4">
-        <a class="text-lg font-semibold text-gray-800 hover:text-gray-600" href="<?= route('root') ?>">Calorize</a>
+        <a class="text-lg font-semibold text-gray-800 hover:text-gray-600" href="<?= $this->current_user->is_admin ? route('admin.index') : route('problems.index') ?>">Calorize</a>
 
         <?php if ($this->current_user) : ?>
     <details class="ml-auto relative">

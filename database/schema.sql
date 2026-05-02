@@ -10,6 +10,7 @@ CREATE TABLE users (
     email VARCHAR(50) NOT NULL,
     encrypted_password VARCHAR(255) NOT NULL,
     avatar_name VARCHAR(65),
+    is_admin BOOLEAN NOT NULL DEFAULT FALSE,
     UNIQUE KEY uq_users_email (email)
 ) ENGINE=InnoDB;
 
