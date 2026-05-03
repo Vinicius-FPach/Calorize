@@ -139,4 +139,31 @@ class UserTest extends TestCase
         $this->assertTrue($this->user->authenticate('123456'));
         $this->assertFalse($this->user->authenticate('654321'));
     }
+
+    public function test_user_should_not_be_admin_by_default(): void
+    {
+        $user = new User([
+            'name' => 'User 3',
+            'email' => 'fulano3@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456'
+        ]);
+        $user->save();
+
+        $this->assertEquals(0, $user->is_admin);
+    }
+
+    public function test_user_should_be_admin_when_is_admin_is_set(): void
+    {
+        $admin = new User([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456',
+            'is_admin' => 1
+        ]);
+        $admin->save();
+
+        $this->assertEquals(1, $admin->is_admin);
+    }
 }
