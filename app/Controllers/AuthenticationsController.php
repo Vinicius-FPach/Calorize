@@ -14,6 +14,10 @@ class AuthenticationsController extends Controller
 
     public function new(): void
     {
+        if (Auth::check()) {
+            $this->redirectTo(route('root'));
+        }
+
         $this->render('authentications/new');
     }
 

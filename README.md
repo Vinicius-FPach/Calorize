@@ -1,6 +1,6 @@
-## Problem Track
+## Calorize
 
-"Problem Track" is the ultimate solution for organizations seeking to enhance their problem resolution processes, drive operational efficiency, and deliver exceptional customer experiences.
+"Calorize" é um projeto desenvolvido para auxiliar criação e alteração de dietas, visando torná-las mais flexíveis!
 
 ### Dependências
 
@@ -12,8 +12,8 @@
 #### Clone Repository
 
 ```
-$ git clone git@github.com:SI-DABE/problem-track.git
-$ cd problem-track
+$ git clone git@github.com:Vinicius-FPach/Calorize.git
+$ cd Calorize
 ```
 
 #### Define the env variables
@@ -40,6 +40,7 @@ ou
 $ ./run up -d
 ```
 
+
 #### Create database and tables
 
 ```
@@ -61,13 +62,11 @@ sudo chown www-data:www-data public/assets/uploads
 #### Run the tests
 
 ```
-$ docker compose run --rm php ./vendor/bin/phpunit tests --color
-```
-
-ou
-
-```
 $ ./run test
+```
+
+```
+$ ./run test:browser
 ```
 
 #### Run the linters
@@ -82,6 +81,12 @@ $ ./run phpcs
 
 ```
 $ ./run phpstan
+```
+
+### Run Tailwind
+
+```
+./run tw
 ```
 
 Access [localhost](http://localhost)
@@ -101,10 +106,3 @@ Neste caso precisa alterar o valor do PHPSESSID de acordo com a o id da sua sess
 ```shell
 curl -H "Accept: application/json" -b "PHPSESSID=5f55f364a48d87fb7ef9f18425a8ae88" localhost/problems
 ```
-
-### Tailwind
-
-```shell
-./run tw
-```
-
