@@ -1,13 +1,31 @@
-<form action="/login" method="POST">
-    <div class="form-group mb-3">
-        <label for="user_email" class="form-label">Email</label>
-        <input id="user_email" type="email" name="user[email]" class="form-control" placeholder="Enter email">
+<form action="/login" method="POST" class="space-y-5" novalidate>
+    <div>
+        <label for="user_email" class="block text-sm font-medium text-gray-700 mb-1">
+            Email
+        </label>
+        <input id="user_email" 
+               type="email" 
+               name="user[email]" 
+               class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" 
+               placeholder="Enter email"
+               required>
     </div>
-    <div class="form-group mb-3">
-        <label for="user_password" class="form-label">Senha</label>
-        <input id="user_password" type="password" name="user[password]" class="form-control" placeholder="Password">
+
+    <div>
+        <label for="user_password" class="block text-sm font-medium text-gray-700 mb-1">
+            Senha
+        </label>
+        <input id="user_password" 
+               type="password" 
+               name="user[password]" 
+               class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" 
+               placeholder="Password"
+               required>
     </div>
-    <div class="d-grid">
-        <input type="submit" class="btn btn-primary btn-block" value="Entrar">
+
+    <div class="pt-2">
+        <input type="submit" 
+               class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition-colors cursor-pointer" 
+               value="Entrar">
     </div>
 </form>

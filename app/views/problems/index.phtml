@@ -1,40 +1,44 @@
-<div class="row">
-    <div class="col-8 mb-3">
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="Procurar problemas" aria-label="Recipient's username" aria-describedby="button-addon2">
-            <button class="btn btn-outline-primary" type="button">
-                Pesquisar...
-            </button>
-        </div>
+<div class="flex gap-4 mb-4">
+    <div class="flex flex-1 max-w-lg">
+        <input type="text" class="flex-1 border border-gray-300 rounded-l-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Procurar dietas">
+        <button class="px-4 py-2 text-sm border border-l-0 border-gray-300 rounded-r-md hover:bg-gray-100 text-gray-700">
+            Pesquisar...
+        </button>
     </div>
-    <div class="col-4">
-        <a href="<?= route('problems.new') ?>" class="btn btn-outline-primary">
-            <i class="fe fe-plus"></i>
-            Registrar Problema
-        </a>
-    </div>
+    <a href="<?= route('problems.new') ?>" class="flex items-center gap-1 px-4 py-2 text-sm border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50">
+        <i class="bi bi-plus"></i>
+        Registrar Dieta
+    </a>
 </div>
 
-<table class="table">
-    <thead>
-        <th>ID</th>
-        <th>Título</th>
-        <th></th>
+<table class="w-full text-sm text-left text-gray-700">
+    <thead class="border-b border-gray-200 text-gray-500 uppercase text-xs">
+        <tr>
+            <th class="py-3 pr-4">ID</th>
+            <th class="py-3 pr-4">Título</th>
+            <th class="py-3"></th>
+        </tr>
     </thead>
-    <tbody>
+    <tbody class="divide-y divide-gray-100">
         <?php foreach ($problems as $problem) : ?>
-            <tr>
-                <td><a href="<?= route('problems.show', ['id' => $problem->id]) ?>">#<?= $problem->id ?></a></td>
-                <td><?= $problem->title ?></td>
-                <td>
-                    <div class="d-flex flex-row-reverse">
-                        <form action="<?= route('problems.destroy', ['id' => $problem->id]) ?>" method="POST" class="m-0">
-                            <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit" class="btn btn-link"><i class="bi bi-archive"></i></button>
-                        </form>
-                        <a href="<?= route('problems.edit', ['id' => $problem->id]) ?>" class="btn btn-link pe-0">
+            <tr class="hover:bg-gray-50">
+                <td class="py-3 pr-4">
+                    <a href="<?= route('problems.show', ['id' => $problem->id]) ?>" class="text-blue-600 hover:underline">
+                        #<?= $problem->id ?>
+                    </a>
+                </td>
+                <td class="py-3 pr-4"><?= $problem->title ?></td>
+                <td class="py-3">
+                    <div class="flex justify-end gap-1">
+                        <a href="<?= route('problems.edit', ['id' => $problem->id]) ?>" class="p-1 text-gray-500 hover:text-blue-600">
                             <i class="bi bi-pencil-square"></i>
                         </a>
+                        <form action="<?= route('problems.destroy', ['id' => $problem->id]) ?>" method="POST" class="m-0">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="p-1 text-gray-500 hover:text-red-600 cursor-pointer">
+                                <i class="bi bi-archive"></i>
+                            </button>
+                        </form>
                     </div>
                 </td>
             </tr>

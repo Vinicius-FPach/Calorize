@@ -43,7 +43,7 @@ class ProblemsControllerTest extends ControllerTestCase
 
     public function test_show_problem(): void
     {
-        $problem = new Problem(['title' => 'Problem 1', 'user_id' => $this->user->id]);
+        $problem = new Problem(['title' => 'Diet 1', 'user_id' => $this->user->id]);
         $problem->save();
 
         $response = $this->get(
@@ -52,7 +52,7 @@ class ProblemsControllerTest extends ControllerTestCase
             params: ['id' => $problem->id]
         );
 
-        $this->assertMatchesRegularExpression("/Visualização do Problema #{$problem->id}/", $response);
+        $this->assertMatchesRegularExpression("/Visualização da dieta #{$problem->id}/", $response);
         $this->assertMatchesRegularExpression("/{$problem->title}/", $response);
     }
 
@@ -85,7 +85,7 @@ class ProblemsControllerTest extends ControllerTestCase
 
     public function test_edit_problem(): void
     {
-        $problem = new Problem(['title' => 'Problem 1', 'user_id' => $this->user->id]);
+        $problem = new Problem(['title' => 'Diet 1', 'user_id' => $this->user->id]);
         $problem->save();
 
         $response = $this->get(
@@ -94,9 +94,9 @@ class ProblemsControllerTest extends ControllerTestCase
             params: ['id' => $problem->id]
         );
 
-        $this->assertMatchesRegularExpression("/Editar Problema #{$problem->id}/", $response);
+        $this->assertMatchesRegularExpression("/Editar Dieta #{$problem->id}/", $response);
 
-        $regex = '/<input\s[^>]*type=[\'"]text[\'"][^>]*name=[\'"]problem\[title\][\'"][^>]*value=[\'"]Problem 1[\'"][^>]*>/i';
+        $regex = '/<input\s[^>]*type=[\'"]text[\'"][^>]*name=[\'"]problem\[title\][\'"][^>]*value=[\'"]Diet 1[\'"][^>]*>/i';
         $this->assertMatchesRegularExpression($regex, $response);
     }
 
