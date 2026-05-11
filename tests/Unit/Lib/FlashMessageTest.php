@@ -16,6 +16,15 @@ class FlashMessageTest extends TestCase
         $this->assertEquals('Success message', $flash['success']);
     }
 
+    public function test_warning(): void
+    {
+        FlashMessage::warning('Warning message');
+        $flash = FlashMessage::get();
+
+        $this->assertArrayHasKey('warning', $flash);
+        $this->assertEquals('Warning message', $flash['warning']);
+    }
+
     public function test_danger(): void
     {
         FlashMessage::danger('Danger message');
