@@ -30,32 +30,40 @@ class Profile extends Model
 
     public function validates(): void
     {
-        if (is_null($this->height) || $this->height === '') {
-            $this->addError('height', 'Informe sua altura!');
-        } elseif ($this->height <= 0) {
-            $this->addError('height', 'A altura não pode ser negativa!');
+        // Validação de Altura
+        // Verificamos se é menor ou igual a zero diretamente
+        if ($this->height <= 0) {
+            $this->addError('height', 'A altura deve ser informada e maior que zero!');
         }
-        if (is_null($this->age) || $this->age === '') {
-            $this->addError('age', 'Informe sua idade!');
-        } elseif ($this->age < 0) {
-            $this->addError('age', 'A idade não pode ser negativa!');
+
+        // Validação de Idade
+        // Idade pode ser 0 (para bebês), mas no seu caso (Calorize), provavelmente > 0
+        if ($this->age <= 0) {
+            $this->addError('age', 'Informe uma idade válida!');
         }
-        if (is_null($this->weight) || $this->weight === '') {
-            $this->addError('weight', 'Informe seu peso!');
-        } elseif ($this->weight <= 0 || $this->weight > 999) {
-            $this->addError('weight', 'O peso deve ser maior que zero!');
+
+        // Validação de Peso (float)
+        if ($this->weight <= 0) {
+            $this->addError('weight', 'O peso deve ser informado e maior que zero!');
         }
-        if (is_null($this->biotype) || $this->biotype === '') {
-            $this->addError('biotype', 'Selecione seu biotipo!');
-        }
-        if (is_null($this->gender) || $this->gender === '') {
+
+        // Para campos de texto (como Gênero ou Biotipo), o PHPStan aceita o empty()
+        if ($this->gender === '') {
             $this->addError('gender', 'Selecione seu sexo!');
         }
-        if (is_null($this->activity_factor) || $this->activity_factor === '') {
-            $this->addError('activity_factor', 'Selecione seu nível de atividade!');
+
+        // Validação de Biotipo (Select)
+        if ($this->biotype === '') {
+            $this->addError('biotype', 'Selecione seu biotipo!');
         }
-        if (is_null($this->objective) || $this->objective === '') {
+
+        // Validação de Objetivo (Select)
+        if ($this->objective === '') {
             $this->addError('objective', 'Selecione seu objetivo!');
+        }
+
+        if ($this->activity_factor <= 0) {
+            $this->addError('activity_factor', 'Selecione seu fator de atividade!');
         }
     }
 

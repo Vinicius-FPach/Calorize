@@ -15,8 +15,6 @@ use Core\Database\ActiveRecord\Model;
  * @property string $encrypted_password
  * @property string $avatar_name
  * @property int $is_admin
- * @property Problem[] $problems
- * @property Problem[] $reinforced_problems
  */
 class User extends Model
 {
@@ -43,16 +41,6 @@ class User extends Model
     public function diets(): HasMany
     {
         return $this->hasMany(Diet::class, 'user_id');
-    }
-
-    public function problems(): HasMany
-    {
-        return $this->hasMany(Problem::class, 'user_id');
-    }
-
-    public function reinforcedProblems(): BelongsToMany
-    {
-        return $this->belongsToMany(Problem::class, 'problem_user_reinforce', 'user_id', 'problem_id');
     }
 
     public function validates(): void

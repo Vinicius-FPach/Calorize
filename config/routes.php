@@ -2,9 +2,7 @@
 
 use App\Controllers\AuthenticationsController;
 use App\Controllers\DietsController;
-use App\Controllers\ProblemsController;
 use App\Controllers\ProfileController;
-use App\Controllers\ReinforceProblemsController;
 use App\Controllers\AdminController;
 use App\Controllers\HomeController;
 use Core\Router\Route;
@@ -48,20 +46,4 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/biometric', [ProfileController::class, 'createBiometric'])->name('profile.biometric.create');
     Route::get('/profile/biometric/edit', [ProfileController::class, 'editBiometric'])->name('profile.biometric.edit');
     Route::put('/profile/biometric', [ProfileController::class, 'updateBiometric'])->name('profile.biometric.update');
-
-    // Reinforce Problems
-    Route::get('/reinforce/problems', [ReinforceProblemsController::class, 'index'])
-        ->name('reinforce.problems');
-    Route::get('/reinforce/problems/page/{page}', [ReinforceProblemsController::class, 'index'])
-        ->name('reinforce.problems.paginate');
-
-    Route::get('/reinforce/problems/supported', [ReinforceProblemsController::class, 'supported'])
-        ->name('reinforce.problems.supported');
-
-    Route::post('/reinforce/problems/{id}', [ReinforceProblemsController::class, 'support'])
-        ->name('reinforce.problems.create');
-    Route::post(
-        '/reinforce/problems/{id}/stopped-supporting',
-        [ReinforceProblemsController::class, 'stoppedSupporting']
-    )->name('reinforce.problems.stopped-supporting');
 });
