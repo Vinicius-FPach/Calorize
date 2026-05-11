@@ -35,6 +35,16 @@ class User extends Model
         }
     }
 
+    public function profile(): ?Profile
+    {
+        return Profile::findBy(['user_id' => $this->id]);
+    }
+
+    public function diets(): HasMany
+    {
+        return $this->hasMany(Diet::class, 'user_id');
+    }
+
     public function problems(): HasMany
     {
         return $this->hasMany(Problem::class, 'user_id');
