@@ -43,7 +43,7 @@ class DietCalculator
         };
     }
 
-   public function protein(): float
+    public function protein(): float
     {
         return match ($this->profile->objective) {
             'EMAGRECER' => 2.0 * $this->profile->weight,

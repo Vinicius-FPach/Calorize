@@ -24,12 +24,11 @@ class ProfileCest extends BaseAcceptanceCest
         $page->fillField('user[password]', '123456');
         $page->click('Entrar');
 
-        $page->click('summary');
-        $page->click('Profile');
+        $page->click('Perfil');
 
         $page->seeInCurrentUrl('/profile');
 
-        $page->click('Completar perfil biométrico');
+        $page->click('COMPLETAR PERFIL BIOMÉTRICO');
 
         $page->seeInCurrentUrl('/profile/biometric/new');
 
@@ -48,7 +47,7 @@ class ProfileCest extends BaseAcceptanceCest
         $page->selectOption('profile[objective]', 'GANHAR');
         $page->selectOption('profile[activity_factor]', '1.200');
 
-        $page->click('Salvar');
+        $page->click('SALVAR');
 
         $page->seeInCurrentUrl('/profile');
         $page->see('Perfil biométrico criado com sucesso!');
@@ -58,7 +57,7 @@ class ProfileCest extends BaseAcceptanceCest
     {
         $this->loginAndAccessProfileWithoutBiometrics($page);
 
-        $page->click('Salvar');
+        $page->click('SALVAR');
 
         $page->seeInCurrentUrl('/profile/biometric');
 
@@ -80,7 +79,7 @@ class ProfileCest extends BaseAcceptanceCest
         $page->selectOption('profile[gender]', 'F');
         $page->selectOption('profile[activity_factor]', '1.550');
 
-        $page->click('Salvar');
+        $page->click('SALVAR');
 
         $page->see('Informe uma idade válida!');
         $page->see('O peso deve ser informado e maior que zero!');
@@ -119,13 +118,11 @@ class ProfileCest extends BaseAcceptanceCest
         $page->fillField('user[password]', '123456');
         $page->click('Entrar');
 
-        $page->click('summary');
-
-        $page->click('Profile');
+        $page->click('Perfil');
 
         $page->seeInCurrentUrl('/profile');
 
-        $page->click('Editar perfil biométrico');
+        $page->click('EDITAR PERFIL BIOMÉTRICO');
 
         $page->seeInCurrentUrl('/profile/biometric/edit');
 
@@ -142,13 +139,13 @@ class ProfileCest extends BaseAcceptanceCest
         $page->selectOption('profile[gender]', 'Masculino');
         $page->selectOption('profile[activity_factor]', '1.550');
 
-        $page->click('Atualizar');
+        $page->click('ATUALIZAR');
 
         $page->seeInCurrentUrl('/profile');
 
         $page->see('Perfil biométrico atualizado com sucesso!');
 
-        $page->click('Editar perfil biométrico');
+        $page->click('EDITAR PERFIL BIOMÉTRICO');
 
         $page->seeInField('profile[height]', '185');
         $page->seeInField('profile[weight]', '82.50');
@@ -164,7 +161,7 @@ class ProfileCest extends BaseAcceptanceCest
         $page->fillField('profile[age]', '-10');
         $page->fillField('profile[height]', '0');
 
-        $page->click('Atualizar');
+        $page->click('ATUALIZAR');
 
         $page->seeInCurrentUrl('/profile/biometric');
 
@@ -176,7 +173,7 @@ class ProfileCest extends BaseAcceptanceCest
     {
         $this->loginAndAccessProfileWithExistingBiometrics($page);
 
-        $page->click('Atualizar');
+        $page->click('ATUALIZAR');
 
         $page->seeInCurrentUrl('/profile');
 
@@ -190,7 +187,7 @@ class ProfileCest extends BaseAcceptanceCest
         $page->selectOption('profile[gender]', '');
         $page->selectOption('profile[biotype]', '');
 
-        $page->click('Atualizar');
+        $page->click('ATUALIZAR');
 
         $page->seeInCurrentUrl('/profile/biometric');
 
