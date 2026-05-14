@@ -21,6 +21,15 @@ class Diet extends Model
     protected static string $table = 'diets';
     protected static array $columns = ['user_id', 'name', 'basal_calc', 'get_calc', 'kcal_objt', 'is_active'];
 
+    public function __construct($params = [])
+    {
+        parent::__construct($params);
+
+        if ($this->is_active === null) {
+            $this->is_active = 1;
+        }
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');

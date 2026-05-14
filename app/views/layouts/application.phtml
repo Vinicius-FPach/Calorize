@@ -26,6 +26,21 @@
             <img src="/assets/images/defaults/logo.svg" class="h-8 w-auto" alt="Calorize">
         </a>
 
+        <div class="hidden lg:!flex flex-1 justify-center items-center gap-10">
+            <a href="<?= route('root') ?>"
+            class="text-md font-medium border-b-2 transition-colors <?= $_SERVER['REQUEST_URI'] === '/' ? 'border-primary text-primary' : 'border-transparent text-black hover:text-gray-600' ?>">
+                Início
+            </a>
+            <a href="<?= route('diets.index') ?>"
+            class="text-md font-medium border-b-2 transition-colors <?= str_starts_with($_SERVER['REQUEST_URI'], '/diets') ? 'border-primary text-primary' : 'border-transparent text-black hover:text-gray-600' ?>">
+                Minhas Dietas
+            </a>
+            <a href="<?= route('profile.show') ?>"
+            class="text-md font-medium border-b-2 transition-colors <?= str_starts_with($_SERVER['REQUEST_URI'], '/profile') ? 'border-primary text-primary' : 'border-transparent text-black hover:text-gray-600' ?>">
+                Perfil
+            </a>
+        </div>
+
         <?php if ($this->current_user) : ?>
             <details class="ml-auto relative group">
                 <summary class="flex items-center gap-1 text-sm text-gray-700 hover:text-gray-900 cursor-pointer list-none">
@@ -33,10 +48,6 @@
                     <i class="bi bi-chevron-down text-xs hidden lg:!block"></i>
                 </summary>
                 <div class="absolute right-0 mt-1 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50 hidden lg:group-open:block">
-                    <a class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="<?= route('profile.show') ?>">
-                        <i class="bi bi-person-fill text-xl text-black"></i>
-                        Profile
-                    </a>
                     <a class="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors" href="<?= route('users.logout') ?>">
                         <i class="bi bi-box-arrow-right text-xl text-red-600"></i>
                         Sair
@@ -54,10 +65,16 @@
         <nav class="mt-1 flex-1 overflow-y-auto">
             <ul class="flex flex-col">
                 <li>
-                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="<?= route('root') ?>">Início</a>
+                    <a class="flex items-center block gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="<?= route('root') ?>">
+                        <i class="bi bi-house-door-fill text-xl text-black"></i>
+                        <span class="font-medium">Início</span>
+                    </a>
                 </li>
                 <li>
-                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="<?= route('diets.index') ?>">Minhas dietas</a>
+                    <a class="flex items-center block gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="<?= route('diets.index') ?>">
+                        <i class="bi bi-table text-xl text-black"></i>
+                        <span class="font-medium">Minhas dietas</span>
+                    </a>
                 </li>
                 <li>
                     <a class="flex items-center block gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="<?= route('profile.show') ?>">
@@ -78,45 +95,24 @@
 
     <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 hidden"></div>
 
-    <main class="pt-2 px-6">
+    <main class="py-2 px-6 min-h-[calc(100vh-3.75rem)] flex flex-col">
+        <div class="w-full lg:!w-3/4 mx-auto flex-1 flex flex-col">
 
-        <?php require '_flash_message.phtml'; ?>
+            <?php require '_flash_message.phtml'; ?>
 
-        <header class="mb-3">
-            <h1 class="text-2xl font-semibold text-grey-800">
-                <?= $title ?>
-            </h1>
-        </header>
+            <header class="mb-3 text-center">
+                <?php if (!empty($title)) : ?>
+                    <h1 class="text-2xl font-semibold text-gray-800">
+                        <?= $title ?>
+                    </h1>
+                <?php endif; ?>
+            </header>
 
-        <?php require $view ?>
-
+            <?php require $view ?>
+        </div>
     </main>
 
-    <script>
-        const toggle = document.getElementById('menu-toggle');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-
-        toggle.addEventListener('click', () => {
-            const isOpen = !sidebar.classList.contains('-translate-x-full');
-            
-            if (isOpen) {
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
-                setTimeout(() => sidebar.classList.add('hidden'), 300);
-            } else {
-                sidebar.classList.remove('hidden');
-                setTimeout(() => sidebar.classList.remove('-translate-x-full'), 10);
-                overlay.classList.remove('hidden');
-            }
-        });
-
-        overlay.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-            setTimeout(() => sidebar.classList.add('hidden'), 300);
-        });
-    </script>
+    <script src="/assets/js/sidebar.js"></script>
 
 </body>
 

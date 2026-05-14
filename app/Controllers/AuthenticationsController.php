@@ -41,7 +41,7 @@ class AuthenticationsController extends Controller
             if ($user->is_admin) {
                 $this->redirectTo(route('admin.index'));
             } else {
-                $this->redirectTo(route('diets.index'));
+                $this->redirectTo(route('root'));
             }
         } else {
             FlashMessage::danger('Email e/ou senha inválidos!');

@@ -1,6 +1,14 @@
 /*! tailwindcss v4.2.4 | MIT License | https://tailwindcss.com */
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #098A26;
+  --color-primary-dark: #076e1e;
+}
+
+@source "/var/www/app/**/*.php";
+@source "/var/www/app/**/*.phtml";
+
 @layer properties;
 @layer theme, base, components, utilities;
 @layer theme {

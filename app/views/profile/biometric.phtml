@@ -1,96 +1,98 @@
-<form action="<?= $profile->id ? route('profile.biometric.update') : route('profile.biometric.create') ?>" method="POST" novalidate>
-    <?php if ($profile->id) : ?>
-        <input type="hidden" name="_method" value="PUT">
-    <?php endif; ?>
+<div class="flex justify-center pt-10">
+    <form class="w-full lg:!w-3/4" action="<?= $profile->id ? route('profile.biometric.update') : route('profile.biometric.create') ?>" method="POST" novalidate>
+        <?php if ($profile->id) : ?>
+            <input type="hidden" name="_method" value="PUT">
+        <?php endif; ?>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Altura (cm)</label>
-            <input type="number" min="0" name="profile[height]" value="<?= $profile->height ?>"
-                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-            <?php if ($profile->errors('height')) : ?>
-                <p class="text-red-600 text-xs mt-1"><?= $profile->errors('height') ?></p>
-            <?php endif; ?>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Altura (cm)</label>
+                <input type="number" min="0" name="profile[height]" value="<?= $profile->height ?>"
+                    class="w-full bg-[#f6f6f6] border border-gray-200 rounded-md px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                <?php if ($profile->errors('height')) : ?>
+                    <p class="text-red-600 text-xs mt-1"><?= $profile->errors('height') ?></p>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Idade</label>
+                <input type="number" min="0" name="profile[age]" value="<?= $profile->age ?>"
+                    class="w-full bg-[#f6f6f6] border border-gray-200 rounded-md px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                <?php if ($profile->errors('age')) : ?>
+                    <p class="text-red-600 text-xs mt-1"><?= $profile->errors('age') ?></p>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Peso (kg)</label>
+                <input type="number" min="0" max="999" placeholder="Ex: 70,5 ou 70.5" name="profile[weight]" value="<?= $profile->weight ?>"
+                    class="w-full bg-[#f6f6f6] border border-gray-200 rounded-md px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                <?php if ($profile->errors('weight')) : ?>
+                    <p class="text-red-600 text-xs mt-1"><?= $profile->errors('weight') ?></p>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Sexo</label>
+                <select name="profile[gender]" class="w-full bg-[#f6f6f6] border border-gray-200 rounded-md px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="">Selecione</option>
+                    <option value="M" <?= $profile->gender === 'M' ? 'selected' : '' ?>>Masculino</option>
+                    <option value="F" <?= $profile->gender === 'F' ? 'selected' : '' ?>>Feminino</option>
+                    <option value="NI" <?= $profile->gender === 'NI' ? 'selected' : '' ?>>Não informado</option>
+                </select>
+                <?php if ($profile->errors('gender')) : ?>
+                    <p class="text-red-600 text-xs mt-1"><?= $profile->errors('gender') ?></p>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Biotipo</label>
+                <select name="profile[biotype]" class="w-full bg-[#f6f6f6] border border-gray-200 rounded-md px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="">Selecione</option>
+                    <option value="ECTOMORFO" <?= $profile->biotype === 'ECTOMORFO' ? 'selected' : '' ?>>Ectomorfo</option>
+                    <option value="MESOMORFO" <?= $profile->biotype === 'MESOMORFO' ? 'selected' : '' ?>>Mesomorfo</option>
+                    <option value="ENDOMORFO" <?= $profile->biotype === 'ENDOMORFO' ? 'selected' : '' ?>>Endomorfo</option>
+                </select>
+                <?php if ($profile->errors('biotype')) : ?>
+                    <p class="text-red-600 text-xs mt-1"><?= $profile->errors('biotype') ?></p>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Objetivo</label>
+                <select name="profile[objective]" class="w-full bg-[#f6f6f6] border border-gray-200 rounded-md px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="">Selecione</option>
+                    <option value="EMAGRECER" <?= $profile->objective === 'EMAGRECER' ? 'selected' : '' ?>>Emagrecer</option>
+                    <option value="MANTER" <?= $profile->objective === 'MANTER' ? 'selected' : '' ?>>Manter peso</option>
+                    <option value="GANHAR" <?= $profile->objective === 'GANHAR' ? 'selected' : '' ?>>Ganhar massa</option>
+                </select>
+                <?php if ($profile->errors('objective')) : ?>
+                    <p class="text-red-600 text-xs mt-1"><?= $profile->errors('objective') ?></p>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Fator de Atividade</label>
+                <select name="profile[activity_factor]" class="w-full bg-[#f6f6f6] border border-gray-200 rounded-md px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="">Selecione</option>
+                    <option value="1.200" <?= $profile->activity_factor == 1.200 ? 'selected' : '' ?>>Sedentário</option>
+                    <option value="1.375" <?= $profile->activity_factor == 1.375 ? 'selected' : '' ?>>Levemente ativo</option>
+                    <option value="1.550" <?= $profile->activity_factor == 1.550 ? 'selected' : '' ?>>Moderadamente ativo</option>
+                    <option value="1.725" <?= $profile->activity_factor == 1.725 ? 'selected' : '' ?>>Muito ativo</option>
+                    <option value="1.900" <?= $profile->activity_factor == 1.900 ? 'selected' : '' ?>>Extremamente ativo</option>
+                </select>
+                <?php if ($profile->errors('activity_factor')) : ?>
+                    <p class="text-red-600 text-xs mt-1"><?= $profile->errors('activity_factor') ?></p>
+                <?php endif; ?>
+            </div>
+
         </div>
 
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Idade</label>
-            <input type="number" min="0" name="profile[age]" value="<?= $profile->age ?>"
-                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-            <?php if ($profile->errors('age')) : ?>
-                <p class="text-red-600 text-xs mt-1"><?= $profile->errors('age') ?></p>
-            <?php endif; ?>
+        <div class="flex mt-6 justify-center">
+            <button type="submit" class="px-6 py-2 text-white text-sm font-black rounded-md bg-primary hover:opacity-90 transition-opacity cursor-pointer">
+                <?= $profile->id ? 'ATUALIZAR' : 'SALVAR' ?>
+            </button>
         </div>
-
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Peso (kg)</label>
-            <input type="number" min="0" max="999" placeholder="Ex: 70,5 ou 70.5" name="profile[weight]" value="<?= $profile->weight ?>"
-                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-            <?php if ($profile->errors('weight')) : ?>
-                <p class="text-red-600 text-xs mt-1"><?= $profile->errors('weight') ?></p>
-            <?php endif; ?>
-        </div>
-
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Sexo</label>
-            <select name="profile[gender]" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                <option value="">Selecione</option>
-                <option value="M" <?= $profile->gender === 'M' ? 'selected' : '' ?>>Masculino</option>
-                <option value="F" <?= $profile->gender === 'F' ? 'selected' : '' ?>>Feminino</option>
-                <option value="NI" <?= $profile->gender === 'NI' ? 'selected' : '' ?>>Não informado</option>
-            </select>
-            <?php if ($profile->errors('gender')) : ?>
-                <p class="text-red-600 text-xs mt-1"><?= $profile->errors('gender') ?></p>
-            <?php endif; ?>
-        </div>
-
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Biotipo</label>
-            <select name="profile[biotype]" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                <option value="">Selecione</option>
-                <option value="ECTOMORFO" <?= $profile->biotype === 'ECTOMORFO' ? 'selected' : '' ?>>Ectomorfo</option>
-                <option value="MESOMORFO" <?= $profile->biotype === 'MESOMORFO' ? 'selected' : '' ?>>Mesomorfo</option>
-                <option value="ENDOMORFO" <?= $profile->biotype === 'ENDOMORFO' ? 'selected' : '' ?>>Endomorfo</option>
-            </select>
-            <?php if ($profile->errors('biotype')) : ?>
-                <p class="text-red-600 text-xs mt-1"><?= $profile->errors('biotype') ?></p>
-            <?php endif; ?>
-        </div>
-
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Objetivo</label>
-            <select name="profile[objective]" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                <option value="">Selecione</option>
-                <option value="EMAGRECER" <?= $profile->objective === 'EMAGRECER' ? 'selected' : '' ?>>Emagrecer</option>
-                <option value="MANTER" <?= $profile->objective === 'MANTER' ? 'selected' : '' ?>>Manter peso</option>
-                <option value="GANHAR" <?= $profile->objective === 'GANHAR' ? 'selected' : '' ?>>Ganhar massa</option>
-            </select>
-            <?php if ($profile->errors('objective')) : ?>
-                <p class="text-red-600 text-xs mt-1"><?= $profile->errors('objective') ?></p>
-            <?php endif; ?>
-        </div>
-
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Fator de Atividade</label>
-            <select name="profile[activity_factor]" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                <option value="">Selecione</option>
-                <option value="1.200" <?= $profile->activity_factor == 1.200 ? 'selected' : '' ?>>Sedentário</option>
-                <option value="1.375" <?= $profile->activity_factor == 1.375 ? 'selected' : '' ?>>Levemente ativo</option>
-                <option value="1.550" <?= $profile->activity_factor == 1.550 ? 'selected' : '' ?>>Moderadamente ativo</option>
-                <option value="1.725" <?= $profile->activity_factor == 1.725 ? 'selected' : '' ?>>Muito ativo</option>
-                <option value="1.900" <?= $profile->activity_factor == 1.900 ? 'selected' : '' ?>>Extremamente ativo</option>
-            </select>
-            <?php if ($profile->errors('activity_factor')) : ?>
-                <p class="text-red-600 text-xs mt-1"><?= $profile->errors('activity_factor') ?></p>
-            <?php endif; ?>
-        </div>
-
-    </div>
-
-    <div class="mt-6">
-        <button type="submit" class="px-6 py-2 text-white text-sm rounded-md hover:opacity-90 transition-opacity" style="background-color: #098A26">
-            <?= $profile->id ? 'Atualizar' : 'Salvar' ?>
-        </button>
-    </div>
-</form>
+    </form>
+</div>

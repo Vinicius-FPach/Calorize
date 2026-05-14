@@ -12,8 +12,7 @@ class ProfileController extends Controller
     public function show(): void
     {
         $profile = $this->current_user->profile();
-        $title = 'Meu Perfil';
-        $this->render('profile/show', compact('title', 'profile'));
+        $this->render('profile/show', compact('profile'));
     }
 
     public function updateAvatar(): void

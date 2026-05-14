@@ -30,34 +30,26 @@ class Profile extends Model
 
     public function validates(): void
     {
-        // Validação de Altura
-        // Verificamos se é menor ou igual a zero diretamente
         if ($this->height <= 0) {
             $this->addError('height', 'A altura deve ser informada e maior que zero!');
         }
 
-        // Validação de Idade
-        // Idade pode ser 0 (para bebês), mas no seu caso (Calorize), provavelmente > 0
         if ($this->age <= 0) {
             $this->addError('age', 'Informe uma idade válida!');
         }
 
-        // Validação de Peso (float)
         if ($this->weight <= 0) {
             $this->addError('weight', 'O peso deve ser informado e maior que zero!');
         }
 
-        // Para campos de texto (como Gênero ou Biotipo), o PHPStan aceita o empty()
         if ($this->gender === '') {
             $this->addError('gender', 'Selecione seu sexo!');
         }
 
-        // Validação de Biotipo (Select)
         if ($this->biotype === '') {
             $this->addError('biotype', 'Selecione seu biotipo!');
         }
 
-        // Validação de Objetivo (Select)
         if ($this->objective === '') {
             $this->addError('objective', 'Selecione seu objetivo!');
         }

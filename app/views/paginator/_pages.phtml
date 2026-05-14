@@ -14,7 +14,7 @@
 
         <?php for ($page = 1; $page <= $paginator->totalOfPages(); $page++) : ?>
             <li>
-                <a class="px-3 py-1 text-sm border rounded-md <?= $paginator->isPage($page) ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-300 text-gray-700 hover:bg-gray-100' ?>"
+                <a class="px-3 py-1 text-sm border rounded-md <?= $paginator->isPage($page) ? 'bg-primary text-white border-primary' : 'border-gray-300 text-gray-700 hover:bg-gray-100' ?>"
                     href="<?= route($paginator->getRouteName(), ['page' => $page]) ?>"><?= $page ?></a>
             </li>
         <?php endfor; ?>
