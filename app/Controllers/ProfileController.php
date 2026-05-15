@@ -25,20 +25,24 @@ class ProfileController extends Controller
 
     public function newBiometric(): void
     {
-        if ($this->current_user->profile()) {
+         $profile = $this->current_user->profile();
+
+        if ($profile) {
             FlashMessage::danger('Você já possui um perfil biométrico!');
             $this->redirectTo(route('profile.biometric.edit'));
             return;
         }
 
-        $profile = new Profile();
+        $profile = new Profile(['user_id' => $this->current_user->id]);
         $title = 'Completar Perfil';
         $this->render('profile/biometric', compact('title', 'profile'));
     }
 
     public function createBiometric(Request $request): void
     {
-        if ($this->current_user->profile()) {
+        $profile = $this->current_user->profile();
+
+        if ($profile) {
             FlashMessage::danger('Você já possui um perfil biométrico!');
             $this->redirectTo(route('profile.biometric.edit'));
             return;
@@ -60,28 +64,29 @@ class ProfileController extends Controller
 
     public function editBiometric(): void
     {
-        if (!$this->current_user->profile()) {
+        $profile = $this->current_user->profile();
+
+        if (!$profile) {
             FlashMessage::danger('Você ainda não possui um perfil biométrico!');
             $this->redirectTo(route('profile.biometric.new'));
             return;
         }
 
-        $profile = $this->current_user->profile();
         $title = 'Editar Perfil Biométrico';
         $this->render('profile/biometric', compact('title', 'profile'));
     }
 
     public function updateBiometric(Request $request): void
     {
-        if (!$this->current_user->profile()) {
+        $profile = $this->current_user->profile();
+
+        if (!$profile) {
             FlashMessage::danger('Você ainda não possui um perfil biométrico!');
             $this->redirectTo(route('profile.biometric.new'));
             return;
         }
 
         $params = $request->getParam('profile');
-
-        $profile = $this->current_user->profile();
 
         $dbValues = [
             'height'          => (string) $profile->height,

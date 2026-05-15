@@ -31,7 +31,7 @@ class ProfileTest extends TestCase
             'gender' => 'M',
             'biotype' => 'ECTOMORFO',
             'objective' => 'GANHAR',
-            'activity_factor' => 1.200
+            'activity_factor' => '1.200'
         ]);
         $this->profile->save();
     }
@@ -97,9 +97,9 @@ class ProfileTest extends TestCase
 
     public function test_should_fail_with_invalid_activity_factor(): void
     {
-        $this->profile->activity_factor = 0;
+        $this->profile->activity_factor = '9.999';
         $this->assertFalse($this->profile->isValid());
-        $this->assertEquals('Selecione seu fator de atividade!', $this->profile->errors('activity_factor'));
+        $this->assertEquals('Fator de atividade inválido!', $this->profile->errors('activity_factor'));
     }
 
     public function test_user_relationship(): void

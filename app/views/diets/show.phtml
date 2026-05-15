@@ -4,22 +4,22 @@
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="text-center p-3 bg-primary/10 border border-primary/20 rounded-lg">
             <p class="text-sm font-bold text-gray-700 mb-1">Meta Calórica</p>
-            <p class="text-lg font-black text-primary"><?= $kcalGoal ?></p>
+            <p class="text-lg font-black text-primary"><?= $diet->kcal_objt ?></p>
             <p class="text-sm font-bold text-gray-500">kcal/dia</p>
         </div>
         <div class="text-center p-3 bg-gray-50 border border-gray-200 rounded-lg">
             <p class="text-sm font-bold text-gray-700 mb-1">Proteína</p>
-            <p class="text-lg font-semibold text-gray-800"><?= $protein ?>g</p>
+            <p class="text-lg font-semibold text-gray-800"><?= $diet->protein ?>g</p>
             <p class="text-sm font-bold text-gray-500">por dia</p>
         </div>
         <div class="text-center p-3 bg-gray-50 border border-gray-200 rounded-lg">
             <p class="text-sm font-bold text-gray-700 mb-1">Carboidrato</p>
-            <p class="text-lg font-semibold text-gray-800"><?= $carbs ?>g</p>
+            <p class="text-lg font-semibold text-gray-800"><?= $diet->carbs ?>g</p>
             <p class="text-sm font-bold text-gray-500">por dia</p>
         </div>
         <div class="text-center p-3 bg-gray-50 border border-gray-200 rounded-lg">
             <p class="text-sm font-bold text-gray-700 mb-1">Gordura</p>
-            <p class="text-lg font-semibold text-gray-800"><?= $fat ?>g</p>
+            <p class="text-lg font-semibold text-gray-800"><?= $diet->fat ?>g</p>
             <p class="text-sm font-bold text-gray-500">por dia</p>
         </div>
     </div>

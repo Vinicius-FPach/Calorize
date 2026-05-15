@@ -5,7 +5,7 @@ namespace App\Controllers;
 use Core\Http\Controllers\Controller;
 use Core\Http\Request;
 use Lib\FlashMessage;
-use App\Services\DietCalculator;
+use App\Models\Diet;
 
 class DietsController extends Controller
 {
@@ -18,58 +18,48 @@ class DietsController extends Controller
 
     public function new(): void
     {
-        if (!$this->current_user->profile()) {
+        $profile = $this->current_user->profile();
+
+        if (!$profile) {
             FlashMessage::danger('Complete seu perfil biométrico antes de criar uma dieta!');
             $this->redirectTo(route('profile.biometric.new'));
             return;
         }
 
-        $profile = $this->current_user->profile();
-        $calculator = new DietCalculator($profile);
-
-        $tmb = round($calculator->tmb(), 2);
-        $get = round($calculator->get(), 2);
-        $kcalGoal = round($calculator->kcalGoal(), 2);
-        $protein = round($calculator->protein(), 2);
-        $fat = round($calculator->fat(), 2);
-        $carbs = round($calculator->carbs(), 2);
+        $calculator = $profile->calculator();
+        $kcalGoal = $calculator->kcalGoal();
+        $protein  = $calculator->protein();
+        $fat      = $calculator->fat();
+        $carbs    = $calculator->carbs();
 
         $diet = $this->current_user->diets()->new();
         $title = 'Nova Dieta';
-        $this->render('diets/new', compact('diet', 'title', 'tmb', 'get', 'kcalGoal', 'protein', 'fat', 'carbs'));
+        $this->render('diets/new', compact('diet', 'title', 'kcalGoal', 'protein', 'fat', 'carbs'));
     }
 
     public function create(Request $request): void
     {
-        if (!$this->current_user->profile()) {
+        $profile = $this->current_user->profile();
+
+        if (!$profile) {
             FlashMessage::danger('Complete seu perfil biométrico antes de criar uma dieta!');
             $this->redirectTo(route('profile.biometric.new'));
             return;
         }
 
-        $profile = $this->current_user->profile();
-        $calculator = new DietCalculator($profile);
-
-        $tmb = round($calculator->tmb(), 2);
-        $get = round($calculator->get(), 2);
-        $kcalGoal = round($calculator->kcalGoal(), 2);
-        $protein = round($calculator->protein(), 2);
-        $fat = round($calculator->fat(), 2);
-        $carbs = round($calculator->carbs(), 2);
-
         $params = $request->getParams();
-        $params['diet']['user_id'] = $this->current_user->id;
-        $params['diet']['basal_calc'] = $tmb;
-        $params['diet']['get_calc'] = $get;
-        $params['diet']['kcal_objt'] = $kcalGoal;
-        $diet = $this->current_user->diets()->new($params['diet']);
+        $diet = Diet::createFromProfile($this->current_user, $params['diet']['name']);
 
         if ($diet->save()) {
             FlashMessage::success('Dieta registrada com sucesso!');
             $this->redirectTo(route('diets.index'));
         } else {
             $title = 'Nova Dieta';
-            $this->render('diets/new', compact('diet', 'title', 'tmb', 'get', 'kcalGoal', 'protein', 'fat', 'carbs'));
+            $kcalGoal = $diet->kcal_objt;
+            $protein  = $diet->protein;
+            $fat      = $diet->fat;
+            $carbs    = $diet->carbs;
+            $this->render('diets/new', compact('diet', 'title', 'kcalGoal', 'protein', 'fat', 'carbs'));
         }
     }
 
@@ -84,16 +74,8 @@ class DietsController extends Controller
             return;
         }
 
-        $profile = $this->current_user->profile();
-        $calculator = new DietCalculator($profile);
-
-        $kcalGoal = round($calculator->kcalGoal(), 2);
-        $protein = round($calculator->protein(), 2);
-        $fat = round($calculator->fat(), 2);
-        $carbs = round($calculator->carbs(), 2);
-
         $title = $diet->name;
-        $this->render('diets/show', compact('diet', 'title', 'kcalGoal', 'protein', 'fat', 'carbs'));
+        $this->render('diets/show', compact('diet', 'title'));
     }
 
     public function edit(Request $request): void
@@ -107,16 +89,8 @@ class DietsController extends Controller
             return;
         }
 
-        $profile = $this->current_user->profile();
-        $calculator = new DietCalculator($profile);
-
-        $kcalGoal = round($calculator->kcalGoal(), 2);
-        $protein = round($calculator->protein(), 2);
-        $fat = round($calculator->fat(), 2);
-        $carbs = round($calculator->carbs(), 2);
-
         $title = 'Editar Dieta';
-        $this->render('diets/edit', compact('diet', 'title', 'kcalGoal', 'protein', 'fat', 'carbs'));
+        $this->render('diets/edit', compact('diet', 'title'));
     }
 
     public function update(Request $request): void
@@ -125,6 +99,13 @@ class DietsController extends Controller
         $params = $request->getParam('diet');
 
         $diet = $this->current_user->diets()->findById($id);
+
+        if (!$diet) {
+            FlashMessage::danger('Dieta não encontrada!');
+            $this->redirectTo(route('diets.index'));
+            return;
+        }
+
         if ($diet->name === $params['name']) {
             FlashMessage::warning('Nenhuma alteração detectada em relação aos dados atuais.');
             $this->redirectTo(route('diets.index'));
@@ -137,7 +118,6 @@ class DietsController extends Controller
             FlashMessage::success('Dieta atualizada com sucesso!');
             $this->redirectTo(route('diets.index'));
         } else {
-            FlashMessage::danger('Existem dados incorretos! Por favor verifique!');
             $title = 'Editar Dieta';
             $this->render('diets/edit', compact('diet', 'title'));
         }

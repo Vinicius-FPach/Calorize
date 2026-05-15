@@ -31,36 +31,36 @@ class DietCalculator
 
     public function get(): float
     {
-        return $this->tmb() * $this->profile->activity_factor;
+        return $this->tmb() * (float) $this->profile->activity_factor;
     }
 
     public function kcalGoal(): float
     {
-        return match ($this->profile->objective) {
+        return round(match ($this->profile->objective) {
             'EMAGRECER' => $this->get() - 500,
             'GANHAR'    => $this->get() + 300,
             default     => $this->get()
-        };
+        }, 2);
     }
 
     public function protein(): float
     {
-        return match ($this->profile->objective) {
+        return round(match ($this->profile->objective) {
             'EMAGRECER' => 2.0 * $this->profile->weight,
             'GANHAR'    => 2.0 * $this->profile->weight,
             default     => 1.6 * $this->profile->weight
-        };
+        }, 2);
     }
 
     public function fat(): float
     {
-        return ($this->get() * 0.25) / 9;
+        return round(($this->get() * 0.25) / 9, 2);
     }
 
     public function carbs(): float
     {
         $proteinKcal = $this->protein() * 4;
         $fatKcal = $this->fat() * 9;
-        return ($this->kcalGoal() - $proteinKcal - $fatKcal) / 4;
+        return round(($this->kcalGoal() - $proteinKcal - $fatKcal) / 4, 2);
     }
 }

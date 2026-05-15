@@ -67,7 +67,7 @@ class ProfileAccessTest extends TestCase
             'gender' => 'M',
             'biotype' => 'ECTOMORFO',
             'objective' => 'GANHAR',
-            'activity_factor' => 1.550
+            'activity_factor' => '1.550'
         ]);
         $profile->save();
 

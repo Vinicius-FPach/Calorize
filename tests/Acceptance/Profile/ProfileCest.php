@@ -109,7 +109,7 @@ class ProfileCest extends BaseAcceptanceCest
             'gender' => 'M',
             'biotype' => 'ECTOMORFO',
             'objective' => 'GANHAR',
-            'activity_factor' => 1.200
+            'activity_factor' => '1.200'
         ]);
         $profile->save();
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use Core\Database\ActiveRecord\BelongsTo;
 use Lib\Validations;
 use Core\Database\ActiveRecord\Model;
+use App\Services\DietCalculator;
 
 /**
  * @property int $id
@@ -14,14 +15,17 @@ use Core\Database\ActiveRecord\Model;
  * @property float $weight
  * @property string $biotype
  * @property string $gender
- * @property float $activity_factor
+ * @property string $activity_factor
  * @property string $objective
  * @property User $user
  */
 class Profile extends Model
 {
     protected static string $table = 'profiles';
-    protected static array $columns = ['user_id', 'height', 'age', 'weight', 'biotype', 'gender', 'activity_factor', 'objective'];
+    protected static array $columns = [
+        'user_id', 'height', 'age', 'weight',
+        'biotype', 'gender', 'activity_factor', 'objective'
+    ];
 
     public function user(): BelongsTo
     {
@@ -30,32 +34,19 @@ class Profile extends Model
 
     public function validates(): void
     {
-        if ($this->height <= 0) {
-            $this->addError('height', 'A altura deve ser informada e maior que zero!');
-        }
+        Validations::greaterThan('height', $this, 0, msg: 'A altura deve ser informada e maior que zero!');
+        Validations::greaterThan('age', $this, 0, msg: 'Informe uma idade válida!');
+        Validations::greaterThan('weight', $this, 0, msg: 'O peso deve ser informado e maior que zero!');
+        Validations::greaterThan('activity_factor', $this, 0, msg: 'Selecione seu fator de atividade!');
 
-        if ($this->age <= 0) {
-            $this->addError('age', 'Informe uma idade válida!');
-        }
+        Validations::notEmpty('gender', $this, msg: 'Selecione seu sexo!');
+        Validations::notEmpty('biotype', $this, msg: 'Selecione seu biotipo!');
+        Validations::notEmpty('objective', $this, msg: 'Selecione seu objetivo!');
 
-        if ($this->weight <= 0) {
-            $this->addError('weight', 'O peso deve ser informado e maior que zero!');
-        }
-
-        if ($this->gender === '') {
-            $this->addError('gender', 'Selecione seu sexo!');
-        }
-
-        if ($this->biotype === '') {
-            $this->addError('biotype', 'Selecione seu biotipo!');
-        }
-
-        if ($this->objective === '') {
-            $this->addError('objective', 'Selecione seu objetivo!');
-        }
-
-        if ($this->activity_factor <= 0) {
-            $this->addError('activity_factor', 'Selecione seu fator de atividade!');
+        $validFactors = ['1.200', '1.375', '1.550', '1.725', '1.900'];
+        $isInvalid = !in_array(number_format((float)$this->activity_factor, 3, '.', ''), $validFactors);
+        if (!$this->errors('activity_factor') && $isInvalid) {
+                $this->addError('activity_factor', 'Fator de atividade inválido!');
         }
     }
 
@@ -67,5 +58,10 @@ class Profile extends Model
         }
 
         parent::__set($property, $value);
+    }
+
+    public function calculator(): DietCalculator
+    {
+        return new DietCalculator($this);
     }
 }
