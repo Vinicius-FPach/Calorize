@@ -1,9 +1,8 @@
 <?php
 
 use App\Controllers\AuthenticationsController;
-use App\Controllers\ProblemsController;
+use App\Controllers\DietsController;
 use App\Controllers\ProfileController;
-use App\Controllers\ReinforceProblemsController;
 use App\Controllers\AdminController;
 use App\Controllers\HomeController;
 use Core\Router\Route;
@@ -20,20 +19,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('root');
 
     // Create
-    Route::get('/problems/new', [ProblemsController::class, 'new'])->name('problems.new');
-    Route::post('/problems', [ProblemsController::class, 'create'])->name('problems.create');
+    Route::get('/diets/new', [DietsController::class, 'new'])->name('diets.new');
+    Route::post('/diets', [DietsController::class, 'create'])->name('diets.create');
 
     // Retrieve
-    Route::get('/problems', [ProblemsController::class, 'index'])->name('problems.index');
-    Route::get('/problems/page/{page}', [ProblemsController::class, 'index'])->name('problems.paginate');
-    Route::get('/problems/{id}', [ProblemsController::class, 'show'])->name('problems.show');
+    Route::get('/diets', [DietsController::class, 'index'])->name('diets.index');
+    Route::get('/diets/page/{page}', [DietsController::class, 'index'])->name('diets.paginate');
+    Route::get('/diets/{id}', [DietsController::class, 'show'])->name('diets.show');
 
     // Update
-    Route::get('/problems/{id}/edit', [ProblemsController::class, 'edit'])->name('problems.edit');
-    Route::put('/problems/{id}', [ProblemsController::class, 'update'])->name('problems.update');
+    Route::get('/diets/{id}/edit', [DietsController::class, 'edit'])->name('diets.edit');
+    Route::put('/diets/{id}', [DietsController::class, 'update'])->name('diets.update');
 
     // Delete
-    Route::delete('/problems/{id}', [ProblemsController::class, 'destroy'])->name('problems.destroy');
+    Route::delete('/diets/{id}', [DietsController::class, 'destroy'])->name('diets.destroy');
 
     // Logout
     Route::get('/logout', [AuthenticationsController::class, 'destroy'])->name('users.logout');
@@ -42,20 +41,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
 
-
-    // Reinforce Problems
-    Route::get('/reinforce/problems', [ReinforceProblemsController::class, 'index'])
-        ->name('reinforce.problems');
-    Route::get('/reinforce/problems/page/{page}', [ReinforceProblemsController::class, 'index'])
-        ->name('reinforce.problems.paginate');
-
-    Route::get('/reinforce/problems/supported', [ReinforceProblemsController::class, 'supported'])
-        ->name('reinforce.problems.supported');
-
-    Route::post('/reinforce/problems/{id}', [ReinforceProblemsController::class, 'support'])
-        ->name('reinforce.problems.create');
-    Route::post(
-        '/reinforce/problems/{id}/stopped-supporting',
-        [ReinforceProblemsController::class, 'stoppedSupporting']
-    )->name('reinforce.problems.stopped-supporting');
+    // Biometric Profile
+    Route::get('/profile/biometric/new', [ProfileController::class, 'newBiometric'])->name('profile.biometric.new');
+    Route::post('/profile/biometric', [ProfileController::class, 'createBiometric'])->name('profile.biometric.create');
+    Route::get('/profile/biometric/edit', [ProfileController::class, 'editBiometric'])->name('profile.biometric.edit');
+    Route::put('/profile/biometric', [ProfileController::class, 'updateBiometric'])->name('profile.biometric.update');
 });

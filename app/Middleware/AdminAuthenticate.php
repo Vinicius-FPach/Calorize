@@ -16,7 +16,7 @@ class AdminAuthenticate implements Middleware
             $this->redirectTo(route('users.login'));
         } elseif (!Auth::user()->is_admin) {
             FlashMessage::danger('Você não tem permissão para acessar essa página');
-            $this->redirectTo(route('problems.index'));
+            $this->redirectTo(route('root'));
         }
     }
 

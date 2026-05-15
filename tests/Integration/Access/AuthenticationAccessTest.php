@@ -3,7 +3,8 @@
 namespace Tests\Integration\Access;
 
 use GuzzleHttp\Client;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
+use App\Models\User;
 
 class AuthenticationAccessTest extends TestCase
 {
@@ -39,15 +40,60 @@ class AuthenticationAccessTest extends TestCase
         $this->assertEquals('/login', $response->getHeaderLine('Location'));
     }
 
-    public function test_login_page_should_be_accessible_without_authentication(): void
+    public function test_profile_biometric_new_route_should_not_be_accessible_without_authentication(): void
     {
-        $response = $this->client->get('/login');
-        $this->assertEquals(200, $response->getStatusCode());
+        $response = $this->client->get('/profile/biometric/new');
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/login', $response->getHeaderLine('Location'));
+    }
+
+    public function test_profile_biometric_create_route_should_not_be_accessible_without_authentication(): void
+    {
+        $response = $this->client->post('/profile/biometric');
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/login', $response->getHeaderLine('Location'));
+    }
+
+    public function test_profile_biometric_edit_route_should_not_be_accessible_without_authentication(): void
+    {
+        $response = $this->client->get('/profile/biometric/edit');
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/login', $response->getHeaderLine('Location'));
+    }
+
+    public function test_profile_biometric_update_route_should_not_be_accessible_without_authentication(): void
+    {
+        $response = $this->client->put('/profile/biometric');
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/login', $response->getHeaderLine('Location'));
     }
 
     public function test_login_page_should_not_be_accessible_when_authenticated(): void
     {
-        $response = $this->client->get('/login');
-        $this->assertEquals(200, $response->getStatusCode());
+        $user = new User([
+            'name' => 'Fulano',
+            'email' => 'fulano@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456'
+        ]);
+        $user->save();
+
+        $loginResponse = $this->client->post('/login', [
+            'form_params' => [
+                'user' => [
+                    'email' => 'fulano@example.com',
+                    'password' => '123456'
+                ]
+            ]
+        ]);
+
+        $cookie = $loginResponse->getHeaderLine('Set-Cookie');
+
+        $response = $this->client->get('/login', [
+            'headers' => ['Cookie' => $cookie]
+        ]);
+
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/', $response->getHeaderLine('Location'));
     }
 }
