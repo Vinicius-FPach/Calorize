@@ -81,8 +81,8 @@ class UserTest extends TestCase
         $this->assertFalse($user->save());
         $this->assertTrue($user->hasErrors());
 
-        $this->assertEquals('não pode ser vazio!', $user->errors('name'));
-        $this->assertEquals('não pode ser vazio!', $user->errors('email'));
+        $this->assertEquals('Não pode ser vazio!', $user->errors('name'));
+        $this->assertEquals('Não pode ser vazio!', $user->errors('email'));
     }
 
     public function test_errors_should_return_password_confirmation_error(): void

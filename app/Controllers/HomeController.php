@@ -11,7 +11,8 @@ class HomeController extends Controller
         if ($this->current_user->is_admin) {
             $this->redirectTo(route('admin.index'));
         } else {
-            $this->redirectTo(route('problems.index'));
+            $title = '';
+            $this->render('home/index', compact('title'));
         }
     }
 }

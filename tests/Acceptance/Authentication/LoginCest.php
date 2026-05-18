@@ -10,7 +10,7 @@ class LoginCest extends BaseAcceptanceCest
 {
     public function tryToAcessRestrictedAreaWithoutAuthentication(AcceptanceTester $page): void
     {
-        $page->amOnPage('/problems');
+        $page->amOnPage('/diets');
         $page->see('Você deve estar logado para acessar essa página');
         $page->seeInCurrentUrl('/login');
     }
@@ -46,7 +46,7 @@ class LoginCest extends BaseAcceptanceCest
         $page->click('Entrar');
 
         $page->see('Login realizado com sucesso!');
-        $page->seeInCurrentUrl('/problems');
+        $page->seeInCurrentUrl('/');
     }
 
     public function logout(AcceptanceTester $page): void
@@ -108,6 +108,6 @@ class LoginCest extends BaseAcceptanceCest
 
         $page->amOnPage('/admin');
         $page->see('Você não tem permissão para acessar essa página');
-        $page->seeInCurrentUrl('/problems');
+        $page->seeInCurrentUrl('/');
     }
 }

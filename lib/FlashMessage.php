@@ -9,6 +9,11 @@ class FlashMessage
         self::message('success', $value);
     }
 
+    public static function warning(string $value): void
+    {
+        self::message('warning', $value);
+    }
+
     public static function danger(string $value): void
     {
         self::message('danger', $value);

@@ -35,4 +35,30 @@ class ValidationsTest extends TestCase
         $model->password_confirmation = '123456'; // @phpstan-ignore-line
         $this->assertTrue(Validations::passwordConfirmation($model));
     }
+
+    public function test_greater_than(): void
+    {
+        $model = new class () extends Model {
+            protected static array $columns = ['age'];
+        };
+
+        $model->age = 0; // @phpstan-ignore-line
+        $this->assertFalse(Validations::greaterThan('age', $model, 0));
+
+        $model->age = 1;
+        $this->assertTrue(Validations::greaterThan('age', $model, 0));
+    }
+
+    public function test_max_length(): void
+    {
+        $model = new class () extends Model {
+            protected static array $columns = ['name'];
+        };
+
+        $model->name = 'Nome muito longo demais'; // @phpstan-ignore-line
+        $this->assertFalse(Validations::maxLength('name', $model, 10));
+
+        $model->name = 'Nome';
+        $this->assertTrue(Validations::maxLength('name', $model, 10));
+    }
 }

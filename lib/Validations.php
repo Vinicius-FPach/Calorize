@@ -6,10 +6,30 @@ use Core\Database\Database;
 
 class Validations
 {
-    public static function notEmpty($attribute, $obj)
+    public static function notEmpty($attribute, $obj, string $msg = 'Não pode ser vazio!')
     {
         if ($obj->$attribute === null || $obj->$attribute === '') {
-            $obj->addError($attribute, 'não pode ser vazio!');
+            $obj->addError($attribute, $msg);
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function greaterThan($attribute, $obj, $value, string $msg = 'Não pode ser vazio!')
+    {
+        if ($obj->$attribute <= $value) {
+            $obj->addError($attribute, $msg);
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function maxLength($attribute, $obj, $value, string $msg = 'Excede o limite de caracteres!')
+    {
+        if (strlen($obj->$attribute) > $value) {
+            $obj->addError($attribute, $msg);
             return false;
         }
 
