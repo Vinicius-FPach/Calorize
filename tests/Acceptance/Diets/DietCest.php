@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Acceptance\Diet;
+namespace Tests\Acceptance\Diets;
 
 use App\Models\User;
 use App\Models\Profile;
