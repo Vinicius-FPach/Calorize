@@ -26,6 +26,16 @@ class Validations
         return true;
     }
 
+    public static function maxLength($attribute, $obj, $value, string $msg = 'Excede o limite de caracteres!')
+    {
+        if (strlen($obj->$attribute) > $value) {
+            $obj->addError($attribute, $msg);
+            return false;
+        }
+
+        return true;
+    }
+
     public static function passwordConfirmation($obj)
     {
         if ($obj->password !== $obj->password_confirmation) {

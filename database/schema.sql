@@ -39,7 +39,7 @@ CREATE TABLE profiles (
 CREATE TABLE diets (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(32) NOT NULL,
     basal_calc DECIMAL(8,2),
     get_calc DECIMAL(8,2),
     kcal_objt DECIMAL(8,2),

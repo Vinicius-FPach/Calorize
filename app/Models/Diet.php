@@ -45,6 +45,7 @@ class Diet extends Model
     public function validates(): void
     {
         Validations::notEmpty('name', $this, msg: 'O nome da dieta não pode ser vazio!');
+        Validations::maxLength('name', $this, 32, msg: 'O nome da dieta não pode ter mais de 32 caracteres!');
     }
 
     public static function createFromProfile(User $user, string $name): static
