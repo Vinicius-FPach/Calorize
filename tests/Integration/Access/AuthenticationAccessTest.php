@@ -96,4 +96,53 @@ class AuthenticationAccessTest extends TestCase
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals('/', $response->getHeaderLine('Location'));
     }
+
+    public function test_diets_index_route_should_not_be_accessible_without_authentication(): void
+    {
+        $response = $this->client->get('/diets');
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/login', $response->getHeaderLine('Location'));
+    }
+
+    public function test_diets_new_route_should_not_be_accessible_without_authentication(): void
+    {
+        $response = $this->client->get('/diets/new');
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/login', $response->getHeaderLine('Location'));
+    }
+
+    public function test_diets_create_route_should_not_be_accessible_without_authentication(): void
+    {
+        $response = $this->client->post('/diets');
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/login', $response->getHeaderLine('Location'));
+    }
+
+    public function test_diets_show_route_should_not_be_accessible_without_authentication(): void
+    {
+        $response = $this->client->get('/diets/1');
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/login', $response->getHeaderLine('Location'));
+    }
+
+    public function test_diets_edit_route_should_not_be_accessible_without_authentication(): void
+    {
+        $response = $this->client->get('/diets/1/edit');
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/login', $response->getHeaderLine('Location'));
+    }
+
+    public function test_diets_update_route_should_not_be_accessible_without_authentication(): void
+    {
+        $response = $this->client->put('/diets/1');
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/login', $response->getHeaderLine('Location'));
+    }
+
+    public function test_diets_destroy_route_should_not_be_accessible_without_authentication(): void
+    {
+        $response = $this->client->delete('/diets/1');
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertEquals('/login', $response->getHeaderLine('Location'));
+    }
 }

@@ -194,4 +194,14 @@ class ProfileCest extends BaseAcceptanceCest
         $page->see('Selecione seu sexo!');
         $page->see('Selecione seu biotipo!');
     }
+
+    public function failToCreateProfileWhenAlreadyExists(AcceptanceTester $page): void
+    {
+        $this->loginAndAccessProfileWithExistingBiometrics($page);
+
+        $page->amOnPage('/profile/biometric/new');
+
+        $page->seeInCurrentUrl('/profile/biometric/edit');
+        $page->see('Você já possui um perfil biométrico!');
+    }
 }
