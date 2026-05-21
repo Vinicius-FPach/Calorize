@@ -88,16 +88,6 @@ class ProfileController extends Controller
 
         $params = $request->getParam('profile');
 
-        $dbValues = [
-            'height'          => (string) $profile->height,
-            'age'             => (string) $profile->age,
-            'weight'          => number_format((float)$profile->weight, 2, '.', ''),
-            'biotype'         => $profile->biotype,
-            'gender'          => $profile->gender,
-            'activity_factor' => number_format((float)$profile->activity_factor, 3, '.', ''),
-            'objective'       => $profile->objective,
-        ];
-
         $profile->height          = $params['height'] ?? $profile->height;
         $profile->age             = $params['age'] ?? $profile->age;
         $profile->weight          = $params['weight'] ?? $profile->weight;
@@ -106,17 +96,7 @@ class ProfileController extends Controller
         $profile->activity_factor = $params['activity_factor'] ?? $profile->activity_factor;
         $profile->objective       = $params['objective'] ?? $profile->objective;
 
-        $postValues = [
-            'height'          => (string) $profile->height,
-            'age'             => (string) $profile->age,
-            'weight'          => number_format((float)$profile->weight, 2, '.', ''),
-            'biotype'         => $profile->biotype,
-            'gender'          => $profile->gender,
-            'activity_factor' => number_format((float)$profile->activity_factor, 3, '.', ''),
-            'objective'       => $profile->objective,
-        ];
-
-        if ($dbValues === $postValues) {
+        if (!$profile->hasChanges()) {
             FlashMessage::warning('Nenhuma alteração detectada em relação aos dados atuais.');
             $this->redirectTo(route('profile.show'));
             return;
