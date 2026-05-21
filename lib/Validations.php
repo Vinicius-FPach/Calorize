@@ -36,6 +36,16 @@ class Validations
         return true;
     }
 
+    public static function maxValue($attribute, $obj, $value, string $msg = 'Excede o limite!')
+    {
+        if ($obj->$attribute > $value) {
+            $obj->addError($attribute, $msg);
+            return false;
+        }
+
+        return true;
+    }
+
     public static function passwordConfirmation($obj)
     {
         if ($obj->password !== $obj->password_confirmation) {

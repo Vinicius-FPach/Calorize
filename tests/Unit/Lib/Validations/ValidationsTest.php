@@ -61,4 +61,17 @@ class ValidationsTest extends TestCase
         $model->name = 'Nome';
         $this->assertTrue(Validations::maxLength('name', $model, 10));
     }
+
+    public function test_max_value(): void
+    {
+        $model = new class () extends Model {
+            protected static array $columns = ['age'];
+        };
+
+        $model->age = 121; // @phpstan-ignore-line
+        $this->assertFalse(Validations::maxValue('age', $model, 120));
+
+        $model->age = 120;
+        $this->assertTrue(Validations::maxValue('age', $model, 120));
+    }
 }

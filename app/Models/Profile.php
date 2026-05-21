@@ -39,6 +39,10 @@ class Profile extends Model
         Validations::greaterThan('weight', $this, 0, msg: 'O peso deve ser informado e maior que zero!');
         Validations::greaterThan('activity_factor', $this, 0, msg: 'Selecione seu fator de atividade!');
 
+        Validations::maxValue('height', $this, 280, msg: 'A altura não pode ser maior que 280cm!');
+        Validations::maxValue('age', $this, 120, msg: 'A idade não pode ser maior que 120 anos!');
+        Validations::maxValue('weight', $this, 500, msg: 'O peso não pode ser maior que 500kg!');
+
         Validations::notEmpty('gender', $this, msg: 'Selecione seu sexo!');
         Validations::notEmpty('biotype', $this, msg: 'Selecione seu biotipo!');
         Validations::notEmpty('objective', $this, msg: 'Selecione seu objetivo!');
