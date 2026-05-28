@@ -41,6 +41,15 @@ class HasMany
         );
     }
 
+    /**
+     * @param array<string, mixed> $conditions
+     */
+    public function findBy(array $conditions): ?Model
+    {
+        $conditions[$this->foreignKey] = $this->model->id;
+        return $this->related::findBy($conditions);
+    }
+
     public function paginate(int $page = 1, int $per_page = 10, string $route = null): Paginator
     {
         return new Paginator(

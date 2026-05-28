@@ -34,17 +34,20 @@
                 </div>
             </div>
 
-            <div id="delete-<?= $diet->id ?>" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40">
-                <div class="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full mx-4">
-                    <h3 class="text-base font-semibold text-gray-800 mb-2">Excluir dieta</h3>
-                    <p class="text-sm text-gray-500 mb-6">Tem certeza que deseja excluir <strong class="text-primary"><?= $diet->name ?></strong>? Essa ação não pode ser desfeita.</p>
+            <div id="delete-<?= $diet->id ?>" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity">
+                <div class="bg-white rounded-XL p-6 shadow-xl max-w-sm w-full mx-4 transform transition-all">
+                    <div class="flex items-center gap-3 mb-3 text-red-600">
+                        <i class="bi bi-exclamation-triangle text-xl"></i>
+                        <h3 class="text-lg font-bold text-gray-900">Excluir dieta</h3>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-6 leading-relaxed">Tem certeza que deseja excluir <strong class="text-primary font-semibold"><?= $diet->name ?></strong>? Essa ação não pode ser desfeita.</p>
                     <div class="flex justify-end gap-3">
-                        <button onclick="closeModal('delete-<?= $diet->id ?>')" class="px-4 py-2 text-sm font-black text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer">
+                        <button onclick="closeModal('delete-<?= $diet->id ?>')" class="px-4 py-2 text-sm font-black text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors cursor-pointer">
                             CANCELAR
                         </button>
                         <form action="<?= route('diets.destroy', ['id' => $diet->id]) ?>" method="POST" class="m-0">
                             <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit" class="px-4 py-2 text-sm font-black text-white bg-red-600 rounded-md hover:bg-red-700 cursor-pointer">
+                            <button type="submit" class="px-4 py-2 text-sm font-black text-white bg-red-600 rounded-md hover:bg-red-700 shadow-sm shadow-red-200 transition-colors cursor-pointer">
                                 EXCLUIR
                             </button>
                         </form>
@@ -56,5 +59,3 @@
 <?php endif; ?>
 
 <?php $paginator->renderPagesNavigation(); ?>
-
-<script src="/assets/js/modal.js"></script>

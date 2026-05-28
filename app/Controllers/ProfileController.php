@@ -89,7 +89,7 @@ class ProfileController extends Controller
         $params = $request->getParam('profile');
 
         $profile->height          = $params['height'] ?? $profile->height;
-        $profile->age             = $params['age'] ?? $profile->age;
+        $profile->birthday        = $params['birthday'] ?? $profile->birthday;
         $profile->weight          = $params['weight'] ?? $profile->weight;
         $profile->biotype         = $params['biotype'] ?? $profile->biotype;
         $profile->gender          = $params['gender'] ?? $profile->gender;

@@ -41,7 +41,7 @@ class ProfileCest extends BaseAcceptanceCest
 
         $page->fillField('profile[height]', '175');
         $page->fillField('profile[weight]', '70.5');
-        $page->fillField('profile[age]', '25');
+        $page->fillField('profile[birthday]', '15/05/2000');
         $page->selectOption('profile[gender]', 'M');
         $page->selectOption('profile[biotype]', 'MESOMORFO');
         $page->selectOption('profile[objective]', 'GANHAR');
@@ -62,7 +62,7 @@ class ProfileCest extends BaseAcceptanceCest
         $page->seeInCurrentUrl('/profile/biometric');
 
         $page->see('A altura deve ser informada e maior que zero!');
-        $page->see('Informe uma idade válida!');
+        $page->see('Informe sua data de nascimento!');
         $page->see('O peso deve ser informado e maior que zero!');
         $page->see('Selecione seu sexo!');
         $page->see('Selecione seu biotipo!');
@@ -75,13 +75,13 @@ class ProfileCest extends BaseAcceptanceCest
         $this->loginAndAccessProfileWithoutBiometrics($page);
 
         $page->fillField('profile[height]', '180');
-        $page->fillField('profile[age]', '-5');
+        $page->fillField('profile[birthday]', '01/01/2015');
         $page->selectOption('profile[gender]', 'F');
         $page->selectOption('profile[activity_factor]', '1.550');
 
         $page->click('SALVAR');
 
-        $page->see('Informe uma idade válida!');
+        $page->see('Você deve ter pelo menos 15 anos!');
         $page->see('O peso deve ser informado e maior que zero!');
         $page->see('Selecione seu biotipo!');
         $page->see('Selecione seu objetivo!');
@@ -105,7 +105,7 @@ class ProfileCest extends BaseAcceptanceCest
             'user_id' => $user->id,
             'height' => 170,
             'weight' => 70.0,
-            'age' => 25,
+            'birthday' => '2000-05-15',
             'gender' => 'M',
             'biotype' => 'ECTOMORFO',
             'objective' => 'GANHAR',
@@ -135,7 +135,7 @@ class ProfileCest extends BaseAcceptanceCest
 
         $page->fillField('profile[height]', '185');
         $page->fillField('profile[weight]', '82.5');
-        $page->fillField('profile[age]', '23');
+        $page->fillField('profile[birthday]', '20/03/1995');
         $page->selectOption('profile[gender]', 'Masculino');
         $page->selectOption('profile[activity_factor]', '1.550');
 
@@ -149,7 +149,7 @@ class ProfileCest extends BaseAcceptanceCest
 
         $page->seeInField('profile[height]', '185');
         $page->seeInField('profile[weight]', '82.50');
-        $page->seeInField('profile[age]', '23');
+        $page->seeInField('profile[birthday]', '20/03/1995');
         $page->seeInField('profile[gender]', 'Masculino');
         $page->seeInField('profile[activity_factor]', 'Moderadamente ativo');
     }
@@ -158,14 +158,14 @@ class ProfileCest extends BaseAcceptanceCest
     {
         $this->loginAndAccessProfileWithExistingBiometrics($page);
 
-        $page->fillField('profile[age]', '-10');
+        $page->fillField('profile[birthday]', '01/01/2015');
         $page->fillField('profile[height]', '0');
 
         $page->click('ATUALIZAR');
 
         $page->seeInCurrentUrl('/profile/biometric');
 
-        $page->see('Informe uma idade válida!');
+        $page->see('Você deve ter pelo menos 15 anos!');
         $page->see('A altura deve ser informada e maior que zero!');
     }
 

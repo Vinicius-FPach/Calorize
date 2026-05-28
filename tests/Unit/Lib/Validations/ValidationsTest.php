@@ -39,14 +39,14 @@ class ValidationsTest extends TestCase
     public function test_greater_than(): void
     {
         $model = new class () extends Model {
-            protected static array $columns = ['age'];
+            protected static array $columns = ['height'];
         };
 
-        $model->age = 0; // @phpstan-ignore-line
-        $this->assertFalse(Validations::greaterThan('age', $model, 0));
+        $model->height = 0; // @phpstan-ignore-line
+        $this->assertFalse(Validations::greaterThan('height', $model, 0));
 
-        $model->age = 1;
-        $this->assertTrue(Validations::greaterThan('age', $model, 0));
+        $model->height = 1;
+        $this->assertTrue(Validations::greaterThan('height', $model, 0));
     }
 
     public function test_max_length(): void
@@ -65,13 +65,13 @@ class ValidationsTest extends TestCase
     public function test_max_value(): void
     {
         $model = new class () extends Model {
-            protected static array $columns = ['age'];
+            protected static array $columns = ['height'];
         };
 
-        $model->age = 121; // @phpstan-ignore-line
-        $this->assertFalse(Validations::maxValue('age', $model, 120));
+        $model->height = 121; // @phpstan-ignore-line
+        $this->assertFalse(Validations::maxValue('height', $model, 120));
 
-        $model->age = 120;
-        $this->assertTrue(Validations::maxValue('age', $model, 120));
+        $model->height = 120;
+        $this->assertTrue(Validations::maxValue('height', $model, 120));
     }
 }

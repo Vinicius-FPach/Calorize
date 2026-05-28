@@ -63,7 +63,7 @@ class ProfileAccessTest extends TestCase
             'user_id' => $user->id,
             'height' => 170,
             'weight' => 70.0,
-            'age' => 25,
+            'birthday' => '2000-05-15',
             'gender' => 'M',
             'biotype' => 'ECTOMORFO',
             'objective' => 'GANHAR',

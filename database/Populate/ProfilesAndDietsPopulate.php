@@ -16,7 +16,7 @@ class ProfilesAndDietsPopulate
         $adminProfile = new Profile([
             'user_id'         => $admin->id,
             'height'          => 180,
-            'age'             => 30,
+            'birthday'        => '1994-05-15',
             'weight'          => '85.00',
             'biotype'         => 'MESOMORFO',
             'gender'          => 'M',
@@ -28,7 +28,7 @@ class ProfilesAndDietsPopulate
         $fulanoProfile = new Profile([
             'user_id'         => $fulano->id,
             'height'          => 175,
-            'age'             => 25,
+            'birthday'        => '2001-12-09',
             'weight'          => '70.00',
             'biotype'         => 'ECTOMORFO',
             'gender'          => 'M',

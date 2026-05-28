@@ -1,0 +1,124 @@
+<?php $currentUnit = ($food->unit === 'ml') ? 'ml' : 'g'; ?>
+<div class="flex justify-center pt-10">
+    <form action="<?= route('profile.foods.create') ?>" method="POST" enctype="multipart/form-data" novalidate class="w-full lg:!w-3/4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+                <label class="block text-xs font-black uppercase tracking-wider text-gray-700 mb-1.5">NOME</label>
+                <input type="text" name="food[name]" value="<?= $food->name ?>" placeholder="Ex: Peito de Frango Grelhado"
+                    class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                <?php if ($food->errors('name')) : ?>
+                    <p class="text-red-600 text-xs mt-1 flex items-center gap-1">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <?= $food->errors('name') ?></p>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <label class="block text-xs font-black uppercase tracking-wider text-gray-700 mb-1.5">CATEGORIA</label>
+                <input type="text" name="food[category]" value="<?= $food->category ?>" placeholder="Ex: Frutas, Carnes"
+                    class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                <?php if ($food->errors('category')) : ?>
+                    <p class="text-red-600 text-xs mt-1 flex items-center gap-1">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <?= $food->errors('category') ?></p>
+                <?php endif; ?>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block text-xs font-black uppercase tracking-wider text-gray-700 mb-1.5">UNIDADE DE MEDIDA</label>
+                <select id="unit-select" name="food[unit]" class="w-full bg-gray-50 border border-gray-200 rounded-lg pl-3 pr-14 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                    <option value="">Selecione</option>
+                    <option value="g" <?= $food->unit === 'g' ? 'selected' : '' ?>>Gramas (g)</option>
+                    <option value="ml" <?= $food->unit === 'ml' ? 'selected' : '' ?>>Mililitros (ml)</option>
+                </select>
+                <p class="text-xs text-gray-500 mt-2 flex flex-col sm:flex-row items-start sm:items-center gap-1.5 leading-relaxed sm:leading-none">
+                    <span class="flex items-center gap-1 text-primary shrink-0">
+                        <i class="bi bi-info-circle-fill"></i>
+                        <strong>Atenção:</strong>
+                    </span>
+                    <span>
+                        <strong class="hidden sm:inline">Atenção:</strong> 
+                        Os valores nutricionais abaixo devem se referir estritamente à porção de <strong>100g ou 100ml</strong>.
+                    </span>
+                </p>
+                <?php if ($food->errors('unit')) : ?>
+                    <p class="text-red-600 text-xs mt-1 flex items-center gap-1">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <?= $food->errors('unit') ?></p>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <label class="block text-xs font-black uppercase tracking-wider text-gray-700 mb-1.5">CALORIAS <span class="text-gray-400 font-normal">(por 100<span class="dynamic-unit"><?= $currentUnit ?></span>)</span></label>
+                <div class="relative flex items-center">
+                    <input type="number" step="1" min="0" max="900" name="food[kcal]" value="<?= $food->kcal ?>"
+                        class="w-full bg-gray-50 border border-gray-200 rounded-lg pl-3 pr-14 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                    <span class="absolute right-3 text-xs font-semibold text-gray-400 pointer-events-none">kcal</span>
+                </div>
+                <?php if ($food->errors('kcal')) : ?>
+                    <p class="text-red-600 text-xs mt-1 flex items-center gap-1">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <?= $food->errors('kcal') ?></p>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Proteínas <span class="text-gray-400 font-normal">(por 100<span class="dynamic-unit"><?= $currentUnit ?></span>)</span></label>
+                <div class="relative flex items-center">
+                    <input type="number" step="1" min="0" max="100" name="food[protein]" value="<?= $food->protein ?>"
+                        class="w-full bg-gray-50 border border-gray-200 rounded-lg pl-3 pr-8 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                    <span class="absolute right-3 text-xs font-semibold text-gray-400 pointer-events-none dynamic-badge"><?= $currentUnit ?></span>
+                </div>
+                <?php if ($food->errors('protein')) : ?>
+                    <p class="text-red-600 text-xs mt-1 flex items-center gap-1">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <?= $food->errors('protein') ?></p>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Carboidratos <span class="text-gray-400 font-normal">(por 100<span class="dynamic-unit"><?= $currentUnit ?></span>)</span></label>
+                <div class="relative flex items-center">
+                    <input type="number" step="1" min="0" max="100" name="food[carbs]" value="<?= $food->carbs ?>"
+                        class="w-full bg-gray-50 border border-gray-200 rounded-lg pl-3 pr-8 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                    <span class="absolute right-3 text-xs font-semibold text-gray-400 pointer-events-none dynamic-badge"><?= $currentUnit ?></span>
+                </div>
+                <?php if ($food->errors('carbs')) : ?>
+                    <p class="text-red-600 text-xs mt-1 flex items-center gap-1">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <?= $food->errors('carbs') ?></p>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Gorduras <span class="text-gray-400 font-normal">(por 100<span class="dynamic-unit"><?= $currentUnit ?></span>)</span></label>
+                <div class="relative flex items-center">
+                    <input type="number" step="1" min="0" max="100" name="food[fats]" value="<?= $food->fats ?>"
+                        class="w-full bg-gray-50 border border-gray-200 rounded-lg pl-3 pr-8 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                    <span class="absolute right-3 text-xs font-semibold text-gray-400 pointer-events-none dynamic-badge"><?= $currentUnit ?></span>
+                </div>
+                <?php if ($food->errors('fats')) : ?>
+                    <p class="text-red-600 text-xs mt-1 flex items-center gap-1">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <?= $food->errors('fats') ?></p>
+                <?php endif; ?>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Foto do Alimento <span class="text-gray-400 font-normal text-xs transform none">(Opcional)</span></label>
+                <input type="file" name="food_image" accept="image/jpeg,image/png"
+                    class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-sm shadow-sm file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 file:transition-colors focus:outline-none">
+                <?php if ($food->errors('photo')) : ?>
+                    <p class="text-red-600 text-xs mt-1 flex items-center gap-1">
+                    <i class="bi bi-exclamation-circle"></i>
+                    <?= $food->errors('photo') ?></p>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <button type="submit" class="flex items-center gap-1.5 px-6 py-2 bg-primary text-white font-black text-sm rounded-md hover:opacity-90 shadow-sm transition-all duration-200 cursor-pointer">
+            <i class="bi bi-plus text-base"></i>
+            CRIAR ALIMENTO
+        </button>
+    </form>
+</div>
