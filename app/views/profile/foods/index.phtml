@@ -13,7 +13,7 @@
             <div class="bg-white border border-gray-100 rounded-xl p-4 flex gap-4 shadow-sm hover:shadow-md transition-all duration-200 items-center">
                 
                 <div class="w-36 h-36 rounded-lg overflow-hidden bg-gray-50 flex-shrink-0">
-                    <img src="<?= $food->photo_url ? "/assets/uploads/foods/{$food->id}/{$food->photo_url}" : '/assets/images/defaults/food.png' ?>"
+                    <img src="<?= $food->image()->path() ?>"
                         alt="<?= $food->name ?>"
                         class="w-36 h-36 object-cover">
                 </div>

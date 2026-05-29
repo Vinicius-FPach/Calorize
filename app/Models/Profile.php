@@ -55,7 +55,10 @@ class Profile extends Model
         Validations::notEmpty('objective', $this, msg: 'Selecione seu objetivo!');
         Validations::notEmpty('activity_factor', $this, msg: 'Selecione seu fator de atividade!');
 
-        Validations::validateBirthday('birthday', $this, 15,
+        Validations::validateBirthday(
+            'birthday',
+            $this,
+            15,
             invalidMsg: 'Informe uma data de nascimento válida!',
             futureMsg: 'A data de nascimento não pode ser futura!',
             msg: 'Você deve ter pelo menos 15 anos!'

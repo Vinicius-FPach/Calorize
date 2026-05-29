@@ -92,6 +92,37 @@ class Validations
         return true;
     }
 
+    public static function fileExtension($attribute, $obj, array $extensions, string $msg = 'Extensão de arquivo inválida!'): bool
+    {
+        if (empty($obj->$attribute['name'])) {
+            return true;
+        }
+
+        $parts = explode('.', $obj->$attribute['name']);
+        $extension = strtolower(end($parts));
+
+        if (!in_array($extension, $extensions)) {
+            $obj->addError($attribute, $msg);
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function fileSize($attribute, $obj, int $maxSize, string $msg = 'Tamanho excede o limite permitido!'): bool
+    {
+        if (empty($obj->$attribute['name'])) {
+            return true;
+        }
+
+        if ($obj->$attribute['size'] > $maxSize) {
+            $obj->addError($attribute, $msg);
+            return false;
+        }
+
+        return true;
+    }
+
     public static function passwordConfirmation($obj)
     {
         if ($obj->password !== $obj->password_confirmation) {

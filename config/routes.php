@@ -57,8 +57,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/foods/{uuid}/edit', [FoodsController::class, 'edit'])->name('profile.foods.edit');
     Route::put('/profile/foods/{uuid}', [FoodsController::class, 'update'])->name('profile.foods.update');
     Route::delete('/profile/foods/{uuid}', [FoodsController::class, 'destroy'])->name('profile.foods.destroy');
-
-    // Food image
-    Route::post('/profile/foods/{uuid}/image', [FoodsController::class, 'updateImage'])->name('profile.foods.image');
-    Route::delete('/profile/foods/{uuid}/image', [FoodsController::class, 'destroyImage'])->name('profile.foods.image.destroy');
 });

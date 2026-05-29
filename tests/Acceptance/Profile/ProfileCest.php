@@ -41,7 +41,7 @@ class ProfileCest extends BaseAcceptanceCest
 
         $page->fillField('profile[height]', '175');
         $page->fillField('profile[weight]', '70.5');
-        $page->fillField('profile[birthday]', '15/05/2000');
+        $page->fillField('profile[birthday]', '15052000');
         $page->selectOption('profile[gender]', 'M');
         $page->selectOption('profile[biotype]', 'MESOMORFO');
         $page->selectOption('profile[objective]', 'GANHAR');
@@ -75,7 +75,7 @@ class ProfileCest extends BaseAcceptanceCest
         $this->loginAndAccessProfileWithoutBiometrics($page);
 
         $page->fillField('profile[height]', '180');
-        $page->fillField('profile[birthday]', '01/01/2015');
+        $page->fillField('profile[birthday]', '01012015');
         $page->selectOption('profile[gender]', 'F');
         $page->selectOption('profile[activity_factor]', '1.550');
 
@@ -135,7 +135,9 @@ class ProfileCest extends BaseAcceptanceCest
 
         $page->fillField('profile[height]', '185');
         $page->fillField('profile[weight]', '82.5');
-        $page->fillField('profile[birthday]', '20/03/1995');
+
+        $page->executeJS("document.querySelector('input[name=\"profile[birthday]\"]').value = '1995-03-20';");
+
         $page->selectOption('profile[gender]', 'Masculino');
         $page->selectOption('profile[activity_factor]', '1.550');
 
@@ -149,7 +151,7 @@ class ProfileCest extends BaseAcceptanceCest
 
         $page->seeInField('profile[height]', '185');
         $page->seeInField('profile[weight]', '82.50');
-        $page->seeInField('profile[birthday]', '20/03/1995');
+        $page->seeInField('profile[birthday]', '1995-03-20');
         $page->seeInField('profile[gender]', 'Masculino');
         $page->seeInField('profile[activity_factor]', 'Moderadamente ativo');
     }
@@ -158,7 +160,7 @@ class ProfileCest extends BaseAcceptanceCest
     {
         $this->loginAndAccessProfileWithExistingBiometrics($page);
 
-        $page->fillField('profile[birthday]', '01/01/2015');
+        $page->fillField('profile[birthday]', '01012015');
         $page->fillField('profile[height]', '0');
 
         $page->click('ATUALIZAR');

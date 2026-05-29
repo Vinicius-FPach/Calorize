@@ -25,7 +25,7 @@ class ProfileController extends Controller
 
     public function newBiometric(): void
     {
-         $profile = $this->current_user->profile();
+        $profile = $this->current_user->profile();
 
         if ($profile) {
             FlashMessage::danger('Você já possui um perfil biométrico!');

@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Core\Database\ActiveRecord\BelongsTo;
-use Core\Database\ActiveRecord\HasMany;
-use Lib\Validations;
 use App\Services\FoodImage;
+use Core\Database\ActiveRecord\BelongsTo;
+use Lib\Validations;
 use Core\Database\ActiveRecord\Model;
 
 /**
  * @property int $id
+ * @property string $uuid
  * @property int|null $user_id
  * @property string $name
  * @property float $kcal
@@ -18,7 +18,7 @@ use Core\Database\ActiveRecord\Model;
  * @property float $protein
  * @property string $unit
  * @property string $category
- * @property bool $is_global
+ * @property int $is_global
  * @property string|null $photo_url
  * @property string $moderation_status
  * @property string|null $moderated_at
@@ -55,10 +55,17 @@ class Food extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /** @var array<string, mixed>|null */
+    public ?array $imageFile = null;
+
     public function validates(): void
     {
         Validations::notEmpty('name', $this, msg: 'O nome do alimento não pode ser vazio!');
+        Validations::notEmpty('unit', $this, msg: 'Selecione a unidade de medida!');
+        Validations::notEmpty('category', $this, msg: 'Informe a categoria do alimento!');
+
         Validations::maxLength('name', $this, 32, msg: 'O nome do alimento não pode ter mais de 32 caracteres!');
+        Validations::maxLength('category', $this, 32, msg: 'O nome da categoria não pode ter mais de 32 caracteres!');
 
         Validations::greaterThan('kcal', $this, 0, msg: 'O valor calórico deve ser maior que zero!');
         Validations::greaterThan('carbs', $this, 0, msg: 'Os carboidratos devem ser maiores que zero!');
@@ -70,15 +77,17 @@ class Food extends Model
         Validations::maxValue('fats', $this, 100, msg: 'As gorduras não podem passar de 100g a cada 100g/mL!');
         Validations::maxValue('protein', $this, 100, msg: 'As proteínas não podem passar de 100g a cada 100g/mL!');
 
-        Validations::notEmpty('unit', $this, msg: 'Selecione a unidade de medida!');
-        Validations::notEmpty('category', $this, msg: 'Informe a categoria do alimento!');
+        Validations::fileSize('imageFile', $this, 5 * 1024 * 1024, msg: 'A imagem não pode ser maior que 5MB!');
+        Validations::fileExtension(
+            'imageFile',
+            $this,
+            ['jpg', 'jpeg', 'png'],
+            msg: 'Apenas imagens JPG, JPEG e PNG são permitidas!'
+        );
     }
 
     public function image(): FoodImage
     {
-        return new FoodImage($this, [
-            'extension' => ['jpg', 'jpeg', 'png'],
-            'size' => 5 * 1024 * 1024
-        ]);
+        return new FoodImage($this);
     }
 }

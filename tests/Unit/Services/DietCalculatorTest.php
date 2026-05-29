@@ -13,7 +13,7 @@ class DietCalculatorTest extends TestCase
     {
         $defaults = [
             'height'          => 175,
-            'birthday'        => '15/05/2000',
+            'birthday'        => '2000-15-05',
             'weight'          => '70.00',
             'biotype'         => 'ECTOMORFO',
             'gender'          => 'M',

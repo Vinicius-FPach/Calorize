@@ -13,7 +13,10 @@ class FoodImage
     /** @param array<string, mixed> $validations */
     public function __construct(
         private Model $model,
-        private array $validations = []
+        private array $validations = [
+            'extension' => ['jpg', 'jpeg', 'png'],
+            'size' => 5 * 1024 * 1024
+        ]
     ) {
     }
 
@@ -24,7 +27,7 @@ class FoodImage
             return $this->baseDir() . $this->model->photo_url . '?' . $hash;
         }
 
-        return '/assets/images/defaults/food.png';
+        return '/assets/images/defaults/food.svg';
     }
 
     /**
@@ -33,7 +36,7 @@ class FoodImage
     public function upload(array $image): bool
     {
         $this->image = $image;
-        
+
         if (!$this->isValidImage()) {
             return false;
         }
@@ -163,6 +166,7 @@ class FoodImage
         }
     }
 
+    /** @param array<string, mixed> $image */
     public function validate(array $image): void
     {
         $this->image = $image;
