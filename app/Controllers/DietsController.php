@@ -106,13 +106,13 @@ class DietsController extends Controller
             return;
         }
 
-        if ($diet->name === $params['name']) {
+        $diet->name = $params['name'] ?? $diet->name;
+
+        if (!$diet->hasChanges()) {
             FlashMessage::warning('Nenhuma alteração detectada em relação aos dados atuais.');
             $this->redirectTo(route('diets.index'));
             return;
         }
-
-        $diet->name = $params['name'];
 
         if ($diet->save()) {
             FlashMessage::success('Dieta atualizada com sucesso!');

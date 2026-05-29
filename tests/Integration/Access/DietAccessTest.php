@@ -36,7 +36,7 @@ class DietAccessTest extends TestCase
             $profile = new Profile([
                 'user_id'         => $this->user->id,
                 'height'          => 175,
-                'age'             => 25,
+                'birthday'        => '1983-03-21',
                 'weight'          => '70.00',
                 'biotype'         => 'ECTOMORFO',
                 'gender'          => 'M',
@@ -133,7 +133,7 @@ class DietAccessTest extends TestCase
         $otherProfile = new Profile([
             'user_id'         => $otherUser->id,
             'height'          => 175,
-            'age'             => 25,
+            'birthday'        => '2000-05-15',
             'weight'          => '70.00',
             'biotype'         => 'ECTOMORFO',
             'gender'          => 'M',

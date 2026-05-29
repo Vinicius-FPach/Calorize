@@ -36,6 +36,93 @@ class Validations
         return true;
     }
 
+    public static function maxValue($attribute, $obj, $value, string $msg = 'Excede o limite!')
+    {
+        if ($obj->$attribute > $value) {
+            $obj->addError($attribute, $msg);
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function validateBirthday(
+        $attribute,
+        $obj,
+        int $value,
+        string $invalidMsg = 'Informe uma data de nascimento válida!',
+        string $futureMsg = 'A data de nascimento não pode ser futura!',
+        string $msg = 'Idade mínima não atingida!'
+    ): bool {
+        if (!$obj->$attribute) {
+            return false;
+        }
+
+        $date = \DateTime::createFromFormat('Y-m-d', $obj->$attribute);
+
+        if (!$date || $date->format('Y') < 1920) {
+            $obj->addError($attribute, $invalidMsg);
+            return false;
+        }
+
+        if ($date > new \DateTime('now', new \DateTimeZone('America/Sao_Paulo'))) {
+            $obj->addError($attribute, $futureMsg);
+            return false;
+        }
+
+        if ($obj->age() < $value) {
+            $obj->addError($attribute, $msg);
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function inList($attribute, $obj, array $list, string $msg = 'Valor inválido!'): bool
+    {
+        if ($obj->errors($attribute)) {
+            return false;
+        }
+
+        if (!in_array($obj->$attribute, $list)) {
+            $obj->addError($attribute, $msg);
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function fileExtension($attribute, $obj, array $extensions, string $msg = 'Extensão de arquivo inválida!'): bool
+    {
+        if (empty($obj->$attribute['name'])) {
+            return true;
+        }
+
+        $parts = explode('.', $obj->$attribute['name']);
+        $extension = strtolower(end($parts));
+
+        if (!in_array($extension, $extensions)) {
+            $obj->addError($attribute, $msg);
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function fileSize($attribute, $obj, int $maxSize, string $msg = 'Tamanho excede o limite permitido!'): bool
+    {
+        if (empty($obj->$attribute['name'])) {
+            return true;
+        }
+
+        if ($obj->$attribute['size'] > $maxSize) {
+            $obj->addError($attribute, $msg);
+            return false;
+        }
+
+        return true;
+    }
+
     public static function passwordConfirmation($obj)
     {
         if ($obj->password !== $obj->password_confirmation) {

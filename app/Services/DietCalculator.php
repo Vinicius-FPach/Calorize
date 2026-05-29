@@ -16,16 +16,16 @@ class DietCalculator
     public function tmb(): float
     {
         if ($this->profile->gender === 'M') {
-            return 66.5 + (13.75 * $this->profile->weight) + (5.003 * $this->profile->height) - (6.75 * $this->profile->age);
+            return 66.5 + (13.75 * $this->profile->weight) + (5.003 * $this->profile->height) - (6.75 * $this->profile->age());
         }
 
         if ($this->profile->gender === 'F') {
-            return 655.1 + (9.563 * $this->profile->weight) + (1.850 * $this->profile->height) - (4.676 * $this->profile->age);
+            return 655.1 + (9.563 * $this->profile->weight) + (1.850 * $this->profile->height) - (4.676 * $this->profile->age());
         }
 
         // Não Informado — média entre masculino e feminino
-        $tmbM = 66.5 + (13.75 * $this->profile->weight) + (5.003 * $this->profile->height) - (6.75 * $this->profile->age);
-        $tmbF = 655.1 + (9.563 * $this->profile->weight) + (1.850 * $this->profile->height) - (4.676 * $this->profile->age);
+        $tmbM = 66.5 + (13.75 * $this->profile->weight) + (5.003 * $this->profile->height) - (6.75 * $this->profile->age());
+        $tmbF = 655.1 + (9.563 * $this->profile->weight) + (1.850 * $this->profile->height) - (4.676 * $this->profile->age());
         return ($tmbM + $tmbF) / 2;
     }
 

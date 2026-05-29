@@ -23,7 +23,7 @@ class DietCest extends BaseAcceptanceCest
         $profile = new Profile([
             'user_id'         => $user->id,
             'height'          => 175,
-            'age'             => 25,
+            'birthday'        => '2000-05-15',
             'weight'          => '70.00',
             'biotype'         => 'ECTOMORFO',
             'gender'          => 'M',
