@@ -55,7 +55,6 @@ services:
       context: .
       dockerfile: Dockerfile
     working_dir: /var/www
-    user: "${UID}:${GID}"
     volumes:
       - .:/var/www
       - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
