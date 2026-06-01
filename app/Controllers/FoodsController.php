@@ -108,6 +108,10 @@ class FoodsController extends Controller
 
         $hasImageUpload = !empty($_FILES['food_image']['name']);
 
+        if ($hasImageUpload) {
+            $food->imageFile = $_FILES['food_image'];
+        }
+
         if (!$food->hasChanges() && !$hasImageUpload) {
             FlashMessage::warning('Nenhuma alteração detectada em relação aos dados atuais.');
             $this->redirectTo(route('profile.foods.index'));

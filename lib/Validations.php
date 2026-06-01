@@ -94,14 +94,35 @@ class Validations
 
     public static function fileExtension($attribute, $obj, array $extensions, string $msg = 'Extensão de arquivo inválida!'): bool
     {
-        if (empty($obj->$attribute['name'])) {
+        if (empty($obj->$attribute['tmp_name']) || $obj->$attribute['error'] !== UPLOAD_ERR_OK) {
             return true;
         }
 
-        $parts = explode('.', $obj->$attribute['name']);
-        $extension = strtolower(end($parts));
+        $tmpPath = $obj->$attribute['tmp_name'];
 
-        if (!in_array($extension, $extensions)) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($finfo, $tmpPath);
+        finfo_close($finfo);
+
+        $allowedMimes = [
+            'jpg'  => ['image/jpeg', 'image/pjpeg'],
+            'jpeg' => ['image/jpeg', 'image/pjpeg'],
+            'png'  => ['image/png', 'image/x-png']
+        ];
+
+        $isValid = false;
+        foreach ($extensions as $ext) {
+            $ext = strtolower($ext);
+            if (isset($allowedMimes[$ext]) && in_array($mimeType, $allowedMimes[$ext])) {
+                $isValid = true;
+                break;
+            }
+        }
+
+        $parts = explode('.', $obj->$attribute['name']);
+        $nominalExtension = strtolower(end($parts));
+
+        if (!$isValid || !in_array($nominalExtension, $extensions)) {
             $obj->addError($attribute, $msg);
             return false;
         }
