@@ -114,6 +114,7 @@
                     <div class="w-32 h-32 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 shadow-sm shrink-0 flex items-center justify-center">
                         <img id="image_preview"
                             src="<?= $food->image()->path() ?>"
+                            data-default-image="/assets/images/defaults/food.svg"
                             alt="Preview do alimento"
                             class="w-full h-full object-cover">
                     </div>
@@ -131,9 +132,17 @@
                                 <i class="bi bi-exclamation-circle"></i>
                                 <?= $food->errors('imageFile') ?>
                             </p>
-                        <?php endif; ?>
-                    </div>
+                        <?php endif; ?>    
 
+                        <button
+                            type="button"
+                            id="remove-image-btn"
+                            class="<?= $food->photo_url ? 'flex' : 'hidden' ?> w-fit items-center gap-2 px-3 py-2 text-sm font-medium text-red-600 border border-red-200 bg-red-50 hover:bg-red-100 rounded-lg transition-colors cursor-pointer">
+                            Remover imagem
+                        </button>
+                        
+                        <input type="hidden" name="remove_image" id="remove_image_input" value="0">
+                    </div>
                 </div>
             </div>
         </div>

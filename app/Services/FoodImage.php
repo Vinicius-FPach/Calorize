@@ -10,13 +10,8 @@ class FoodImage
     /** @var array<string, mixed> $image */
     private array $image;
 
-    /** @param array<string, mixed> $validations */
     public function __construct(
         private Model $model,
-        private array $validations = [
-            'extension' => ['jpg', 'jpeg', 'png'],
-            'size' => 5 * 1024 * 1024
-        ]
     ) {
     }
 
@@ -38,9 +33,9 @@ class FoodImage
         $this->image = $image;
 
         if ($this->model->errors('imageFile')) {
-            return false; 
+            return false;
         }
-        
+
         if ($this->uploadFile()) {
             $result = $this->model->update([
                 'photo_url' => $this->getFileName(),

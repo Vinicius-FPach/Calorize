@@ -67,7 +67,7 @@ class FoodsController extends Controller
         }
 
         $title = $food->name;
-        $this->render('profile/foods/show', compact('food', 'title'));
+        $this->render('profile/foods/show', compact('food'));
     }
 
     public function edit(Request $request): void
@@ -98,6 +98,9 @@ class FoodsController extends Controller
             return;
         }
 
+        $removeImage = ($request->getParam('remove_image') === '1') && ($food->photo_url != null);
+        $oldPhotoUrl = $food->photo_url;
+
         $food->name     = $params['name'] ?? $food->name;
         $food->kcal     = $params['kcal'] ?? $food->kcal;
         $food->carbs    = $params['carbs'] ?? $food->carbs;
@@ -110,9 +113,11 @@ class FoodsController extends Controller
 
         if ($hasImageUpload) {
             $food->imageFile = $_FILES['food_image'];
+        } elseif ($removeImage) {
+            $food->photo_url = null;
         }
 
-        if (!$food->hasChanges() && !$hasImageUpload) {
+        if (!$food->hasChanges() && !$hasImageUpload && !$removeImage) {
             FlashMessage::warning('Nenhuma alteração detectada em relação aos dados atuais.');
             $this->redirectTo(route('profile.foods.index'));
             return;
@@ -120,8 +125,10 @@ class FoodsController extends Controller
 
         if ($food->save()) {
             if ($hasImageUpload) {
-                $food->imageFile = $_FILES['food_image'];
                 $food->image()->upload($_FILES['food_image']);
+            } elseif ($removeImage) {
+                $food->photo_url = $oldPhotoUrl;
+                $food->image()->remove();
             }
 
             FlashMessage::success('Alimento atualizado com sucesso!');
