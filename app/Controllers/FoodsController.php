@@ -89,6 +89,7 @@ class FoodsController extends Controller
     {
         $uuid = $request->getParam('uuid');
         $params = $request->getParam('food');
+        $removeImage = $request->getParam('remove_image') === '1';
 
         $food = $this->current_user->foods()->findBy(['uuid' => $uuid]);
 
@@ -108,7 +109,7 @@ class FoodsController extends Controller
 
         $hasImageUpload = !empty($_FILES['food_image']['name']);
 
-        if (!$food->hasChanges() && !$hasImageUpload) {
+        if (!$food->hasChanges() && !$hasImageUpload && !$removeImage) {
             FlashMessage::warning('Nenhuma alteração detectada em relação aos dados atuais.');
             $this->redirectTo(route('profile.foods.index'));
             return;
@@ -118,6 +119,9 @@ class FoodsController extends Controller
             if ($hasImageUpload) {
                 $food->imageFile = $_FILES['food_image'];
                 $food->image()->upload($_FILES['food_image']);
+            }
+            elseif ($removeImage) {
+                $food->image()->remove();
             }
 
             FlashMessage::success('Alimento atualizado com sucesso!');
