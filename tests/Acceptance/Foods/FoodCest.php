@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Tests\Acceptance\Foods;
 
@@ -7,125 +7,173 @@ use App\Models\User;
 use Tests\Acceptance\BaseAcceptanceCest;
 use Tests\Support\AcceptanceTester;
 
-class FoodCest extends BaseAcceptanceCest 
+class FoodCest extends BaseAcceptanceCest
 {
-
     private function loginAndAccessFoods(AcceptanceTester $page): User
     {
-    $user = new User([
-        'name' => 'Fulano',
-        'email' => 'fulano@example.com',
-        'password' => '123456',
-        'password_confirmation' => '123456'
-    ]);
+        $user = new User([
+            'name' => 'Fulano',
+            'email' => 'fulano@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456'
+        ]);
 
-    $user->save();
+        $user->save();
 
-    $page->amOnPage('/login');
-    $page->fillField('user[email]', $user->email);
-    $page->fillField('user[password]', '123456');
-    $page->click('Entrar');
+        $page->amOnPage('/login');
+        $page->fillField('user[email]', $user->email);
+        $page->fillField('user[password]', '123456');
+        $page->click('Entrar');
 
-    $page->amOnPage('/profile/foods');
+        $page->amOnPage('/profile/foods');
 
-    return $user;
+        return $user;
     }
 
-    private function createFood(User $user): Food
+    public function createFoodWithoutImage(AcceptanceTester $page): void
     {
-    $food = new Food([
-        'user_id' => $user->id,
-        'name' => 'Frango',
-        'kcal' => 165,
-        'carbs' => 1,
-        'fats' => 3.6,
-        'protein' => 31,
-        'unit' => 'g',
-        'category' => 'Carnes'
-    ]);
+        $this->loginAndAccessFoods($page);
 
-    $food->save();
+        $page->click('NOVO ALIMENTO');
 
-    return $food;
-}
+        $page->fillField('food[name]', 'Arroz');
+        $page->fillField('food[category]', 'Grãos');
+        $page->selectOption('food[unit]', 'g');
 
-    public function createFoodWithImage(AcceptanceTester $page)
-{
-    $this->loginAndAccessFoods($page);
+        $page->fillField('food[kcal]', '130');
+        $page->fillField('food[protein]', '2.5');
+        $page->fillField('food[carbs]', '28');
+        $page->fillField('food[fats]', '0.2');
 
-    $page->click('NOVO ALIMENTO');
+        $page->click('CRIAR ALIMENTO');
 
-    $page->fillField('food[name]', 'Frango');
-    $page->fillField('food[category]', 'Carnes');
+        $page->seeCurrentUrlEquals('/profile/foods');
+        $page->see('Arroz', 'h1');
 
-    $page->selectOption('food[unit]', 'g');
+        $page->seeElement('img[src*="food.svg"]');
+    }
 
-    $page->fillField('food[kcal]', '165');
-    $page->fillField('food[protein]', '31');
-    $page->fillField('food[carbs]', '1');
-    $page->fillField('food[fats]', '4');
+    public function failToCreateWithEmptyFields(AcceptanceTester $page): void
+    {
+        $this->loginAndAccessFoods($page);
 
-    $page->attachFile('#food_image_input', 'avatar_test.jpg');
+        $page->click('NOVO ALIMENTO');
+        $page->click('CRIAR ALIMENTO');
 
-    $page->click('CRIAR ALIMENTO');
+        $page->seeCurrentUrlEquals('/profile/foods');
 
-    $page->see('Frango');
-    
-}
+        $page->see('O nome do alimento não pode ser vazio!');
+        $page->see('Selecione a unidade de medida!');
+        $page->see('Informe a categoria do alimento!');
+    }
 
-public function showFoodImage(AcceptanceTester $I): void
-{
-    $this->loginAndAccessFoods($I);
+    public function failToCreateWithInvalidFileExtension(AcceptanceTester $page): void
+    {
+        $targetPath = codecept_data_dir('documento_falso.pdf');
+        if (!file_exists($targetPath)) {
+            file_put_contents($targetPath, '%PDF-1.4 ... Conteudo simulado de teste');
+        }
 
-    $I->click('NOVO ALIMENTO');
+        $this->loginAndAccessFoods($page);
 
-    $I->fillField('food[name]', 'Frango');
-    $I->fillField('food[category]', 'Carnes');
-    $I->selectOption('food[unit]', 'g');
+        $page->click('NOVO ALIMENTO');
 
-    $I->fillField('food[kcal]', '165');
-    $I->fillField('food[protein]', '31');
-    $I->fillField('food[carbs]', '1');
-    $I->fillField('food[fats]', '4');
+        $page->fillField('food[name]', 'Alimento Teste');
+        $page->fillField('food[category]', 'Carnes');
+        $page->selectOption('food[unit]', 'g');
+        $page->fillField('food[kcal]', '100');
 
-    $I->attachFile('#food_image_input', 'avatar_test.jpg');
-    $I->click('CRIAR ALIMENTO');
+        $page->attachFile('#food_image_input', 'documento_falso.pdf');
 
-    $food = Food::findBy(['name' => 'Frango']);
+        $page->click('CRIAR ALIMENTO');
 
-    $I->amOnPage("/profile/foods/{$food->uuid}");
+        $page->seeCurrentUrlEquals('/profile/foods');
 
-    $I->seeElement('img[src*="uploads/foods"]');
-}
-public function removeFoodImage(AcceptanceTester $I): void
-{
-    $this->loginAndAccessFoods($I);
+        $page->see('Apenas imagens JPG, JPEG e PNG são permitidas!');
+    }
 
-    $I->click('NOVO ALIMENTO');
+    public function createFoodWithImage(AcceptanceTester $page): void
+    {
+        $this->loginAndAccessFoods($page);
 
-    $I->fillField('food[name]', 'Frango');
-    $I->fillField('food[category]', 'Carnes');
-    $I->selectOption('food[unit]', 'g');
+        $page->click('NOVO ALIMENTO');
 
-    $I->fillField('food[kcal]', '165');
-    $I->fillField('food[protein]', '31');
-    $I->fillField('food[carbs]', '1');
-    $I->fillField('food[fats]', '4');
+        $page->fillField('food[name]', 'Frango');
+        $page->fillField('food[category]', 'Carnes');
+        $page->selectOption('food[unit]', 'g');
 
-    $I->attachFile('#food_image_input', 'avatar_test.jpg');
+        $page->fillField('food[kcal]', '165');
+        $page->fillField('food[protein]', '31');
+        $page->fillField('food[carbs]', '1');
+        $page->fillField('food[fats]', '4');
 
-    $I->click('CRIAR ALIMENTO');
+        $page->attachFile('#food_image_input', 'food_test.jpg');
 
-    $food = Food::findBy(['name' => 'Frango']);
+        $page->click('CRIAR ALIMENTO');
 
-    $I->amOnPage("/profile/foods/{$food->uuid}/edit");
+        $page->seeCurrentUrlEquals('/profile/foods');
+        $page->see('Frango', 'h1');
+        $page->see('Carnes', 'p');
+        $page->see('165.00', '.text-primary');
+        $page->see('31.00g');
+        $page->see('1.00g');
+        $page->see('4.00g');
+        $page->seeElement('div img[alt="Frango"]');
+    }
 
-    $I->see('Remover imagem atual');
+    public function showFoodImage(AcceptanceTester $page): void
+    {
+        $this->loginAndAccessFoods($page);
 
-    $I->checkOption('input[name="remove_image"]');
+        $page->click('NOVO ALIMENTO');
 
-    $I->click('ATUALIZAR ALIMENTO');
+        $page->fillField('food[name]', 'Frango');
+        $page->fillField('food[category]', 'Carnes');
+        $page->selectOption('food[unit]', 'g');
 
-    $I->dontSee('Remover imagem atual');
-}
+        $page->fillField('food[kcal]', '165');
+        $page->fillField('food[protein]', '31');
+        $page->fillField('food[carbs]', '1');
+        $page->fillField('food[fats]', '4');
+
+        $page->attachFile('#food_image_input', 'food_test.jpg');
+        $page->click('CRIAR ALIMENTO');
+
+        $food = Food::findBy(['name' => 'Frango']);
+
+        $page->amOnPage("/profile/foods/{$food->uuid}");
+
+        $page->seeElement('img[src*="uploads/foods"]');
+    }
+
+    public function removeFoodImage(AcceptanceTester $page): void
+    {
+        $this->loginAndAccessFoods($page);
+
+        $page->click('NOVO ALIMENTO');
+
+        $page->fillField('food[name]', 'Frango');
+        $page->fillField('food[category]', 'Carnes');
+        $page->selectOption('food[unit]', 'g');
+
+        $page->fillField('food[kcal]', '165');
+        $page->fillField('food[protein]', '31');
+        $page->fillField('food[carbs]', '1');
+        $page->fillField('food[fats]', '4');
+
+        $page->attachFile('#food_image_input', 'food_test.jpg');
+        $page->click('CRIAR ALIMENTO');
+
+        $food = Food::findBy(['name' => 'Frango']);
+
+        $page->amOnPage("/profile/foods/{$food->uuid}/edit");
+
+        $page->click('Remover imagem');
+
+        $page->click('ATUALIZAR ALIMENTO');
+
+        $page->seeCurrentUrlEquals('/profile/foods');
+
+        $page->dontSeeElement('img[src*="uploads/foods"]');
+    }
 }

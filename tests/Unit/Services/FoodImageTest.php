@@ -71,37 +71,53 @@ class FoodImageTest extends TestCase
 
         $foodReloaded = Food::findById($this->food->id);
 
-        $this->assertEquals(
-            'food.jpg',
+        $this->assertMatchesRegularExpression(
+            '/^[a-f0-9]{16}\.jpg$/',
             $foodReloaded->photo_url
         );
     }
 
-    public function test_invalid_extension(): void
+    public function test_should_fail_with_invalid_image_extension(): void
     {
-        $this->image['name'] = 'arquivo.pdf';
+        $tempFile = tempnam(sys_get_temp_dir(), 'test_img_');
+        file_put_contents($tempFile, '<?php echo "Hacked"; ?>');
 
-        $resp = $this->foodImage->upload($this->image);
+        $this->food->imageFile = [
+            'name' => 'ataque.png',
+            'type' => 'image/png',
+            'tmp_name' => $tempFile,
+            'error' => UPLOAD_ERR_OK,
+            'size' => 1000
+        ];
 
-        $this->assertFalse($resp);
-
-        $this->assertEquals(
-            'Extensão de arquivo inválida!',
-            $this->food->errors('photo')
-        );
+        try {
+            $this->assertFalse($this->food->isValid());
+            $this->assertEquals(
+                'Apenas imagens JPG, JPEG e PNG são permitidas!',
+                $this->food->errors('imageFile')
+            );
+        } finally {
+            if (file_exists($tempFile)) {
+                unlink($tempFile);
+            }
+        }
     }
 
-    public function test_invalid_size(): void
+    public function test_should_fail_with_large_image(): void
     {
-        $this->image['size'] = 6 * 1024 * 1024;
+        $this->food->imageFile = [
+            'name' => 'foto_pesada.jpg',
+            'type' => 'image/jpeg',
+            'tmp_name' => '/tmp/qualquer_coisa',
+            'error' => 1,
+            'size' => 6 * 1024 * 1024
+        ];
 
-        $resp = $this->foodImage->upload($this->image);
-
-        $this->assertFalse($resp);
+        $this->assertFalse($this->food->isValid());
 
         $this->assertEquals(
-            'Tamanho do arquivo excede o limite permitido!',
-            $this->food->errors('photo')
+            'A imagem não pode ser maior que 5MB!',
+            $this->food->errors('imageFile')
         );
     }
 
@@ -120,14 +136,15 @@ class FoodImageTest extends TestCase
             $this->food->image()
         );
     }
+
     public function test_should_generate_unique_uuid(): void
     {
-    $food1 = new Food();
-    $food2 = new Food();
+        $food1 = new Food();
+        $food2 = new Food();
 
-    $this->assertNotEquals(
-        $food1->uuid,
-        $food2->uuid
-    );
+        $this->assertNotEquals(
+            $food1->uuid,
+            $food2->uuid
+        );
     }
 }

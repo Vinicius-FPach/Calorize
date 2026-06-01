@@ -10,13 +10,8 @@ class FoodImage
     /** @var array<string, mixed> $image */
     private array $image;
 
-    /** @param array<string, mixed> $validations */
     public function __construct(
         private Model $model,
-        private array $validations = [
-            'extension' => ['jpg', 'jpeg', 'png'],
-            'size' => 5 * 1024 * 1024
-        ]
     ) {
     }
 
@@ -37,7 +32,7 @@ class FoodImage
     {
         $this->image = $image;
 
-        if (!$this->isValidImage()) {
+        if ($this->model->errors('imageFile')) {
             return false;
         }
 
@@ -108,7 +103,9 @@ class FoodImage
     {
         $file_name_splitted = explode('.', $this->image['name']);
         $file_extension = end($file_name_splitted);
-        return 'food.' . $file_extension;
+
+        $file_extension = strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $file_extension));
+        return $this->model->uuid . '.' . $file_extension;
     }
 
     private function getAbsoluteDestinationPath(): string
@@ -134,42 +131,5 @@ class FoodImage
     private function getAbsoluteSavedFilePath(): string
     {
         return Constants::rootPath()->join('public' . $this->baseDir())->join($this->model->photo_url);
-    }
-
-    private function isValidImage(): bool
-    {
-        if (isset($this->validations['extension'])) {
-            $this->validateImageExtension();
-        }
-
-        if (isset($this->validations['size'])) {
-            $this->validateImageSize();
-        }
-
-        return $this->model->errors('photo') === null;
-    }
-
-    private function validateImageExtension(): void
-    {
-        $file_name_splitted = explode('.', $this->image['name']);
-        $file_extension = end($file_name_splitted);
-
-        if (!in_array($file_extension, $this->validations['extension'])) {
-            $this->model->addError('photo', 'Extensão de arquivo inválida!');
-        }
-    }
-
-    private function validateImageSize(): void
-    {
-        if ($this->image['size'] > $this->validations['size']) {
-            $this->model->addError('photo', 'Tamanho do arquivo excede o limite permitido!');
-        }
-    }
-
-    /** @param array<string, mixed> $image */
-    public function validate(array $image): void
-    {
-        $this->image = $image;
-        $this->isValidImage();
     }
 }

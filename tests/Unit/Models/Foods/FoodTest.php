@@ -162,17 +162,51 @@ class FoodTest extends TestCase
 
     public function test_should_fail_with_invalid_image_extension(): void
     {
+        $tempFile = tempnam(sys_get_temp_dir(), 'test_img_');
+        file_put_contents($tempFile, 'conteudo_falso_de_pdf');
+
         $this->food->imageFile = [
             'name' => 'arquivo.pdf',
+            'type' => 'application/pdf',
+            'tmp_name' => $tempFile,
+            'error' => 0,
             'size' => 1000
         ];
 
-        $this->assertFalse($this->food->isValid());
+        try {
+            $this->assertFalse($this->food->isValid());
 
-        $this->assertEquals(
-            'Apenas imagens JPG, JPEG e PNG são permitidas!',
-            $this->food->errors('imageFile')
-        );
+            $this->assertEquals(
+                'Apenas imagens JPG, JPEG e PNG são permitidas!',
+                $this->food->errors('imageFile')
+            );
+        } finally {
+            if (file_exists($tempFile)) {
+                unlink($tempFile);
+            }
+        }
+    }
+
+    public function test_should_reject_php_code_masked_as_image(): void
+    {
+        $tempFile = tempnam(sys_get_temp_dir(), 'attack_');
+        file_put_contents($tempFile, '<?php echo "test"; ?>');
+
+        $this->food->imageFile = [
+            'name' => 'falso_preview.png',
+            'type' => 'image/png',
+            'tmp_name' => $tempFile,
+            'error' => 0,
+            'size' => 1000
+        ];
+
+        try {
+            $this->assertFalse($this->food->isValid());
+        } finally {
+            if (file_exists($tempFile)) {
+                unlink($tempFile);
+            }
+        }
     }
 
     public function test_should_fail_with_large_image(): void
