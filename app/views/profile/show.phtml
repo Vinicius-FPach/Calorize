@@ -19,6 +19,9 @@
         </div>
         <ul class="mt-2 space-y-1 text-sm text-gray-700">
             <li>Email: <?= $this->current_user->email ?></li>
+             <?php if ($profile) : ?>
+                <li>Idade: <?= $profile->age() ?> anos</li>
+            <?php endif; ?>
         </ul>
 
         <div class="mt-4">

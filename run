@@ -84,6 +84,7 @@ function db:console {
 function db:reset {
     docker compose cp database/schema.sql db:/tmp/
     docker compose exec db sh -c "MYSQL_PWD=${DB_PASSWORD} mysql -u ${DB_USERNAME} ${DB_DATABASE} --default-character-set utf8mb4 < /tmp/schema.sql"
+    docker compose exec php rm -rf /var/www/public/assets/uploads/foods/
 }
 
 function db:populate {

@@ -27,7 +27,7 @@ class ProfileTest extends TestCase
             'user_id' => $this->user->id,
             'height' => 170,
             'weight' => 70.0,
-            'age' => 25,
+            'birthday' => '2000-04-01',
             'gender' => 'M',
             'biotype' => 'ECTOMORFO',
             'objective' => 'GANHAR',
@@ -60,11 +60,11 @@ class ProfileTest extends TestCase
         $this->assertEquals('A altura deve ser informada e maior que zero!', $this->profile->errors('height'));
     }
 
-    public function test_should_fail_with_invalid_age(): void
+    public function test_should_fail_with_invalid_birthday(): void
     {
-        $this->profile->age = -1;
+        $this->profile->birthday = '2015-01-01';
         $this->assertFalse($this->profile->isValid());
-        $this->assertEquals('Informe uma idade válida!', $this->profile->errors('age'));
+        $this->assertEquals('Você deve ter pelo menos 15 anos!', $this->profile->errors('birthday'));
     }
 
     public function test_should_fail_with_invalid_weight(): void

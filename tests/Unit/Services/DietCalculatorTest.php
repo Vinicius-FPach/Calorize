@@ -13,7 +13,7 @@ class DietCalculatorTest extends TestCase
     {
         $defaults = [
             'height'          => 175,
-            'age'             => 25,
+            'birthday'        => '2000-15-05',
             'weight'          => '70.00',
             'biotype'         => 'ECTOMORFO',
             'gender'          => 'M',
@@ -26,23 +26,26 @@ class DietCalculatorTest extends TestCase
 
     public function test_tmb_male(): void
     {
-        $calculator = new DietCalculator($this->makeProfile(['gender' => 'M']));
-        $expected = 66.5 + (13.75 * 70) + (5.003 * 175) - (6.75 * 25);
+        $profile = $this->makeProfile(['gender' => 'M']);
+        $calculator = new DietCalculator($profile);
+        $expected = 66.5 + (13.75 * 70) + (5.003 * 175) - (6.75 * $profile->age());
         $this->assertEquals($expected, $calculator->tmb());
     }
 
     public function test_tmb_female(): void
     {
-        $calculator = new DietCalculator($this->makeProfile(['gender' => 'F']));
-        $expected = 655.1 + (9.563 * 70) + (1.850 * 175) - (4.676 * 25);
+        $profile = $this->makeProfile(['gender' => 'F']);
+        $calculator = new DietCalculator($profile);
+        $expected = 655.1 + (9.563 * 70) + (1.850 * 175) - (4.676 * $profile->age());
         $this->assertEquals($expected, $calculator->tmb());
     }
 
     public function test_tmb_not_informed_should_be_average(): void
     {
-        $calculator = new DietCalculator($this->makeProfile(['gender' => 'NI']));
-        $tmbM = 66.5 + (13.75 * 70) + (5.003 * 175) - (6.75 * 25);
-        $tmbF = 655.1 + (9.563 * 70) + (1.850 * 175) - (4.676 * 25);
+        $profile = $this->makeProfile(['gender' => 'NI']);
+        $calculator = new DietCalculator($profile);
+        $tmbM = 66.5 + (13.75 * 70) + (5.003 * 175) - (6.75 * $profile->age());
+        $tmbF = 655.1 + (9.563 * 70) + (1.850 * 175) - (4.676 * $profile->age());
         $expected = ($tmbM + $tmbF) / 2;
         $this->assertEquals($expected, $calculator->tmb());
     }

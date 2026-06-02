@@ -43,6 +43,11 @@ class User extends Model
         return $this->hasMany(Diet::class, 'user_id');
     }
 
+    public function foods(): HasMany
+    {
+        return $this->hasMany(Food::class, 'user_id');
+    }
+
     public function validates(): void
     {
         Validations::notEmpty('name', $this);

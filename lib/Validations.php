@@ -36,6 +36,114 @@ class Validations
         return true;
     }
 
+    public static function maxValue($attribute, $obj, $value, string $msg = 'Excede o limite!')
+    {
+        if ($obj->$attribute > $value) {
+            $obj->addError($attribute, $msg);
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function validateBirthday(
+        $attribute,
+        $obj,
+        int $value,
+        string $invalidMsg = 'Informe uma data de nascimento válida!',
+        string $futureMsg = 'A data de nascimento não pode ser futura!',
+        string $msg = 'Idade mínima não atingida!'
+    ): bool {
+        if (!$obj->$attribute) {
+            return false;
+        }
+
+        $date = \DateTime::createFromFormat('Y-m-d', $obj->$attribute);
+
+        if (!$date || $date->format('Y') < 1920) {
+            $obj->addError($attribute, $invalidMsg);
+            return false;
+        }
+
+        if ($date > new \DateTime('now', new \DateTimeZone('America/Sao_Paulo'))) {
+            $obj->addError($attribute, $futureMsg);
+            return false;
+        }
+
+        if ($obj->age() < $value) {
+            $obj->addError($attribute, $msg);
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function inList($attribute, $obj, array $list, string $msg = 'Valor inválido!'): bool
+    {
+        if ($obj->errors($attribute)) {
+            return false;
+        }
+
+        if (!in_array($obj->$attribute, $list)) {
+            $obj->addError($attribute, $msg);
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function fileExtension($attribute, $obj, array $extensions, string $msg = 'Extensão de arquivo inválida!'): bool
+    {
+        if (empty($obj->$attribute['tmp_name']) || $obj->$attribute['error'] !== UPLOAD_ERR_OK) {
+            return true;
+        }
+
+        $tmpPath = $obj->$attribute['tmp_name'];
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($finfo, $tmpPath);
+        finfo_close($finfo);
+
+        $allowedMimes = [
+            'jpg'  => ['image/jpeg', 'image/pjpeg'],
+            'jpeg' => ['image/jpeg', 'image/pjpeg'],
+            'png'  => ['image/png', 'image/x-png']
+        ];
+
+        $isValid = false;
+        foreach ($extensions as $ext) {
+            $ext = strtolower($ext);
+            if (isset($allowedMimes[$ext]) && in_array($mimeType, $allowedMimes[$ext])) {
+                $isValid = true;
+                break;
+            }
+        }
+
+        $parts = explode('.', $obj->$attribute['name']);
+        $nominalExtension = strtolower(end($parts));
+
+        if (!$isValid || !in_array($nominalExtension, $extensions)) {
+            $obj->addError($attribute, $msg);
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function fileSize($attribute, $obj, int $maxSize, string $msg = 'Tamanho excede o limite permitido!'): bool
+    {
+        if (empty($obj->$attribute['name'])) {
+            return true;
+        }
+
+        if ($obj->$attribute['size'] > $maxSize) {
+            $obj->addError($attribute, $msg);
+            return false;
+        }
+
+        return true;
+    }
+
     public static function passwordConfirmation($obj)
     {
         if ($obj->password !== $obj->password_confirmation) {

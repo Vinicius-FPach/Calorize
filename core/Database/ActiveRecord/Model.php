@@ -366,4 +366,17 @@ abstract class Model
     {
         return new BelongsToMany($this, $related, $pivot_table, $from_foreign_key, $to_foreign_key);
     }
+
+    public function hasChanges(): bool
+    {
+        $original = static::findById($this->id);
+
+        foreach (static::$columns as $column) {
+            if ((string) $this->$column !== (string) $original->$column) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

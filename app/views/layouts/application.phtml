@@ -5,6 +5,10 @@
     <title>Calorize</title>
 
     <script src="/assets/js/application.js"></script>
+    <script src="/assets/js/modal.js"></script>
+    <script src="/assets/js/foodUnit.js"></script>
+    <script src="/assets/js/food_preview.js"></script>
+
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
@@ -35,8 +39,13 @@
             class="text-md font-medium border-b-2 transition-colors <?= str_starts_with($_SERVER['REQUEST_URI'], '/diets') ? 'border-primary text-primary' : 'border-transparent text-black hover:text-gray-600' ?>">
                 Minhas Dietas
             </a>
+            <a href="<?= route('profile.foods.index') ?>"
+            class="text-md font-medium border-b-2 transition-colors <?= str_starts_with($_SERVER['REQUEST_URI'], '/profile/foods') ? 'border-primary text-primary' : 'border-transparent text-black hover:text-gray-600' ?>">
+                Meus Alimentos
+            </a>
+
             <a href="<?= route('profile.show') ?>"
-            class="text-md font-medium border-b-2 transition-colors <?= str_starts_with($_SERVER['REQUEST_URI'], '/profile') ? 'border-primary text-primary' : 'border-transparent text-black hover:text-gray-600' ?>">
+            class="text-md font-medium border-b-2 transition-colors <?= $_SERVER['REQUEST_URI'] === '/profile' || (str_starts_with($_SERVER['REQUEST_URI'], '/profile') && !str_starts_with($_SERVER['REQUEST_URI'], '/profile/foods')) ? 'border-primary text-primary' : 'border-transparent text-black hover:text-gray-600' ?>">
                 Perfil
             </a>
         </div>
@@ -74,6 +83,12 @@
                     <a class="flex items-center block gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="<?= route('diets.index') ?>">
                         <i class="bi bi-table text-xl text-black"></i>
                         <span class="font-medium">Minhas dietas</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="flex items-center block gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" href="<?= route('profile.foods.index') ?>">
+                        <i class="bi bi-egg-fried text-xl text-black"></i>
+                        <span class="font-medium">Meus Alimentos</span>
                     </a>
                 </li>
                 <li>

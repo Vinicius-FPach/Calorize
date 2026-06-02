@@ -2,6 +2,7 @@
 
 use App\Controllers\AuthenticationsController;
 use App\Controllers\DietsController;
+use App\Controllers\FoodsController;
 use App\Controllers\ProfileController;
 use App\Controllers\AdminController;
 use App\Controllers\HomeController;
@@ -46,4 +47,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/biometric', [ProfileController::class, 'createBiometric'])->name('profile.biometric.create');
     Route::get('/profile/biometric/edit', [ProfileController::class, 'editBiometric'])->name('profile.biometric.edit');
     Route::put('/profile/biometric', [ProfileController::class, 'updateBiometric'])->name('profile.biometric.update');
+
+    // Users private food (profile)
+    Route::get('/profile/foods', [FoodsController::class, 'userIndex'])->name('profile.foods.index');
+    Route::get('/profile/foods/page/{page}', [FoodsController::class, 'userIndex'])->name('profile.foods.paginate');
+    Route::get('/profile/foods/new', [FoodsController::class, 'new'])->name('profile.foods.new');
+    Route::post('/profile/foods', [FoodsController::class, 'create'])->name('profile.foods.create');
+    Route::get('/profile/foods/{uuid}', [FoodsController::class, 'show'])->name('profile.foods.show');
+    Route::get('/profile/foods/{uuid}/edit', [FoodsController::class, 'edit'])->name('profile.foods.edit');
+    Route::put('/profile/foods/{uuid}', [FoodsController::class, 'update'])->name('profile.foods.update');
+    Route::delete('/profile/foods/{uuid}', [FoodsController::class, 'destroy'])->name('profile.foods.destroy');
 });

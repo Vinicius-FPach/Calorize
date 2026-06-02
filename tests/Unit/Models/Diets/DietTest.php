@@ -27,7 +27,7 @@ class DietTest extends TestCase
         $profile = new Profile([
             'user_id'         => $this->user->id,
             'height'          => 175,
-            'age'             => 25,
+            'birthday'        => '1990-08-10',
             'weight'          => '70.00',
             'biotype'         => 'ECTOMORFO',
             'gender'          => 'M',

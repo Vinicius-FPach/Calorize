@@ -1,5 +1,6 @@
 SET foreign_key_checks = 0;
 
+DROP TABLE IF EXISTS foods;
 DROP TABLE IF EXISTS diets;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS profiles;
@@ -22,7 +23,7 @@ CREATE TABLE profiles (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL UNIQUE,
     height INT NOT NULL,
-    age INT NOT NULL,
+    birthday DATE NOT NULL,
     weight DECIMAL(5,2) NOT NULL,
     biotype ENUM('ECTOMORFO', 'MESOMORFO', 'ENDOMORFO') NOT NULL,
     gender ENUM('M', 'F', 'NI') NOT NULL,
@@ -54,6 +55,29 @@ CREATE TABLE diets (
         FOREIGN KEY (user_id)
         REFERENCES users(id)
         ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE foods (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    uuid VARCHAR(16) NOT NULL UNIQUE,
+    user_id INT NULL,
+    name VARCHAR(32) NOT NULL,
+    kcal DECIMAL(8,2) NOT NULL,
+    carbs DECIMAL(8,2) NOT NULL,
+    fats DECIMAL(8,2) NOT NULL,
+    protein DECIMAL(8,2) NOT NULL,
+    unit ENUM('g', 'ml') NOT NULL,
+    category VARCHAR(32) NOT NULL,
+    is_global BOOLEAN NOT NULL DEFAULT FALSE,
+    photo_url VARCHAR(255) NULL,
+    moderation_status ENUM('PENDENTE', 'APROVADO', 'REJEITADO') NOT NULL DEFAULT 'PENDENTE',
+    moderated_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_foods_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
 SET foreign_key_checks = 1;
