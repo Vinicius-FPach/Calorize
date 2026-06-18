@@ -131,6 +131,10 @@ class ProfileAvatar
             $this->validateImageSize();
         }
 
+        if (!empty($this->image['tmp_name'])) {
+            $this->validateImageMimeType();
+        }
+
         return $this->model->errors('avatar') === null;
     }
 
@@ -148,6 +152,21 @@ class ProfileAvatar
     {
         if ($this->image['size'] > $this->validations['size']) {
             $this->model->addError('avatar', 'Tamanho do arquivo inválido');
+        }
+    }
+
+    private function validateImageMimeType(): void
+    {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($finfo, $this->image['tmp_name']);
+
+        $allowedMimes = [
+            'image/jpeg',
+            'image/png',
+        ];
+
+        if (!in_array($mimeType, $allowedMimes)) {
+            $this->model->addError('avatar', 'Apenas imagens JPG, JPEG e PNG são permitidas!');
         }
     }
 }
