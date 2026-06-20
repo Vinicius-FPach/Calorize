@@ -56,6 +56,27 @@ class FoodImage
         }
     }
 
+    /**
+     * @param array<string, mixed> $image
+     */
+    public function hasValidMimeType(array $image): bool
+    {
+        if (empty($image['tmp_name']) || $image['error'] !== UPLOAD_ERR_OK) {
+            return true;
+        }
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($finfo, $image['tmp_name']);
+        finfo_close($finfo);
+
+        $allowedMimes = [
+            'image/jpeg',
+            'image/png',
+        ];
+
+        return in_array($mimeType, $allowedMimes);
+    }
+
     private function removeDir(): void
     {
         $dir = $this->storeDir();

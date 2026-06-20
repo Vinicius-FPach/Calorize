@@ -89,6 +89,9 @@ class User extends Model
 
     public function avatar(): ProfileAvatar
     {
-        return new ProfileAvatar($this);
+        return new ProfileAvatar($this, [
+            'extension' => ['png', 'jpg', 'jpeg'],
+            'size' => 5 * 1024 * 1024
+        ]);
     }
 }

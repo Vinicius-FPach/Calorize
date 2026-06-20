@@ -27,6 +27,8 @@ class ProfileAvatarTest extends TestCase
         $this->user->save();
 
         $tmpFile = tempnam(sys_get_temp_dir(), 'php');
+        file_put_contents($tmpFile, "\xFF\xD8\xFF" . str_repeat("\x00", 100));
+
         $this->image = [
             'name' => 'avatar_test.jpg',
             'full_path' => 'avatar_test.jpg',
@@ -81,5 +83,39 @@ class ProfileAvatarTest extends TestCase
         $resp = $this->profileAvatar->update($this->image);
 
         $this->assertFalse($resp);
+    }
+
+    public function test_update_avatar_invalid_mime_type(): void
+    {
+        $tmpFile = tempnam(sys_get_temp_dir(), 'php');
+        file_put_contents($tmpFile, 'isto não é uma imagem');
+
+        $this->image['tmp_name'] = $tmpFile;
+        $this->image['name'] = 'avatar.jpg';
+
+        $resp = $this->profileAvatar->update($this->image);
+
+        $this->assertFalse($resp);
+
+        unlink($tmpFile);
+    }
+
+    public function test_update_avatar_valid_mime_type(): void
+    {
+        $profileAvatar = $this->getMockBuilder(ProfileAvatar::class)
+            ->setConstructorArgs([$this->user, [
+                'extension' => ['jpg', 'png'],
+                'size' => 2 * 1024 * 1024,
+            ]])
+            ->onlyMethods(['updateFile'])
+            ->getMock();
+
+        $profileAvatar->expects($this->once())
+            ->method('updateFile')
+            ->willReturn(true);
+
+        $resp = $profileAvatar->update($this->image);
+
+        $this->assertTrue($resp);
     }
 }
