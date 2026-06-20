@@ -4,8 +4,10 @@ namespace App\Models;
 
 use App\Services\FoodImage;
 use Core\Database\ActiveRecord\BelongsTo;
+use Core\Database\Database;
 use Lib\Validations;
 use Core\Database\ActiveRecord\Model;
+use PDO;
 
 /**
  * @property int $id
@@ -89,5 +91,35 @@ class Food extends Model
     public function image(): FoodImage
     {
         return new FoodImage($this);
+    }
+
+    /**
+     * @return array<int, Food>
+     */
+    public static function searchAvailable(int $userId, string $search = ''): array
+    {
+        $sql = <<<SQL
+            SELECT id, uuid, user_id, name, kcal, carbs, fats, protein,
+                   unit, category, is_global, photo_url, moderation_status, moderated_at
+            FROM foods
+            WHERE (is_global = 1 OR user_id = :user_id)
+              AND name LIKE :search
+            ORDER BY name ASC
+        SQL;
+
+        $pdo = Database::getDatabaseConn();
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':user_id', $userId);
+        $stmt->bindValue(':search', '%' . $search . '%');
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $foods = [];
+        foreach ($rows as $row) {
+            $foods[] = new static($row);
+        }
+
+        return $foods;
     }
 }

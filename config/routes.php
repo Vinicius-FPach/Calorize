@@ -64,7 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/diets/{diet_id}/meals', [MealsController::class, 'create'])->name('meals.create');
     Route::get('/diets/{diet_id}/meals/{meal_id}', [MealsController::class, 'show'])->name('meals.show');
     Route::delete('/diets/{diet_id}/meals/{meal_id}', [MealsController::class, 'destroy'])->name('meals.destroy');
-    
+
     Route::post('/diets/{diet_id}/meals/{meal_id}/foods', [MealsController::class, 'addFood'])->name('meals.foods.add');
 
     Route::delete('/food_meal/{food_meal_id}', [MealsController::class, 'removeFood'])->name('food_meal.destroy');

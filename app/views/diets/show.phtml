@@ -25,6 +25,29 @@
     </div>
 </div>
 
-<p class="text-center text-md text-gray-400 mt-16">
-    Em breve será possível gerenciar refeições e alimentos da sua dieta por aqui.
-</p>
+<div class="bg-white border border-gray-200 rounded-lg p-6">
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="text-base font-semibold text-gray-800">Refeições</h2>
+        <a href="<?= route('meals.new', ['diet_id' => $diet->id]) ?>" class="flex items-center font-black gap-1 px-4 py-2 text-sm text-white rounded-md bg-primary hover:opacity-90">
+            <i class="bi bi-plus font-black"></i>
+            NOVA REFEIÇÃO
+        </a>
+    </div>
+ 
+    <?php $meals = $diet->meals; ?>
+ 
+    <?php if (empty($meals)) : ?>
+        <p class="text-sm text-gray-400">Nenhuma refeição registrada ainda.</p>
+    <?php else : ?>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <?php foreach ($meals as $meal) : ?>
+                <?php $totals = $meal->totals(); ?>
+                <a href="<?= route('meals.show', ['diet_id' => $diet->id, 'meal_id' => $meal->id]) ?>"
+                    class="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:border-primary transition-colors">
+                    <h3 class="text-sm font-bold text-gray-800 mb-2"><?= $meal->name ?></h3>
+                    <p class="text-lg font-black text-primary"><?= number_format($totals['kcal'], 0) ?> <span class="text-xs font-bold text-gray-500">kcal</span></p>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+</div>

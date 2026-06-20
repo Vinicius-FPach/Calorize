@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Core\Database\ActiveRecord\BelongsTo;
+use Core\Database\ActiveRecord\HasMany;
 use Lib\Validations;
 use Core\Database\ActiveRecord\Model;
 use App\Models\User;
@@ -40,6 +41,11 @@ class Diet extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function meals(): HasMany
+    {
+        return $this->hasMany(Meal::class, 'diet_id');
     }
 
     public function validates(): void
