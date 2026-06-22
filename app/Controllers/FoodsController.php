@@ -142,6 +142,8 @@ class FoodsController extends Controller
     public function destroy(Request $request): void
     {
         $params = $request->getParams();
+
+        /** @var \App\Models\Food|null $food */
         $food = $this->current_user->foods()->findBy(['uuid' => $params['uuid']]);
 
         if (!$food) {
