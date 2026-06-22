@@ -9,7 +9,7 @@ use Core\Database\ActiveRecord\Model;
 /**
  * @property int $id
  * @property int $meal_id
- * @property int $food_id
+ * @property ?int $food_id
  * @property float $quantity
  * @property Meal $meal
  * @property Food $food
