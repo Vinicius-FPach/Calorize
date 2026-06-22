@@ -93,6 +93,11 @@ class Food extends Model
         return new FoodImage($this);
     }
 
+    public function hasMeals(): bool
+    {
+        return !empty(FoodMeal::where(['food_id' => $this->id]));
+    }
+
     /**
      * @return array<int, Food>
      */

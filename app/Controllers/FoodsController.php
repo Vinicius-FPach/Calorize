@@ -142,10 +142,18 @@ class FoodsController extends Controller
     public function destroy(Request $request): void
     {
         $params = $request->getParams();
+
+        /** @var \App\Models\Food|null $food */
         $food = $this->current_user->foods()->findBy(['uuid' => $params['uuid']]);
 
         if (!$food) {
             FlashMessage::danger('Alimento não encontrado!');
+            $this->redirectTo(route('profile.foods.index'));
+            return;
+        }
+
+        if ($food->hasMeals()) {
+            FlashMessage::danger('Não é possível remover um alimento que está vinculado a uma refeição!');
             $this->redirectTo(route('profile.foods.index'));
             return;
         }
