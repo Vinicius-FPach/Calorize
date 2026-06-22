@@ -150,6 +150,12 @@ class FoodsController extends Controller
             return;
         }
 
+        if ($food->hasMeals()) {
+            FlashMessage::danger('Não é possível remover um alimento que está vinculado a uma refeição!');
+            $this->redirectTo(route('profile.foods.index'));
+            return;
+        }
+
         $food->image()->remove();
         $food->destroy();
 
