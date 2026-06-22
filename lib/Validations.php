@@ -98,31 +98,12 @@ class Validations
             return true;
         }
 
-        $tmpPath = $obj->$attribute['tmp_name'];
-
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mimeType = finfo_file($finfo, $tmpPath);
-        finfo_close($finfo);
-
-        $allowedMimes = [
-            'jpg'  => ['image/jpeg', 'image/pjpeg'],
-            'jpeg' => ['image/jpeg', 'image/pjpeg'],
-            'png'  => ['image/png', 'image/x-png']
-        ];
-
-        $isValid = false;
-        foreach ($extensions as $ext) {
-            $ext = strtolower($ext);
-            if (isset($allowedMimes[$ext]) && in_array($mimeType, $allowedMimes[$ext])) {
-                $isValid = true;
-                break;
-            }
-        }
-
         $parts = explode('.', $obj->$attribute['name']);
         $nominalExtension = strtolower(end($parts));
 
-        if (!$isValid || !in_array($nominalExtension, $extensions)) {
+        $hasValidMime = $obj->image()->hasValidMimeType($obj->$attribute);
+
+        if (!$hasValidMime || !in_array($nominalExtension, $extensions)) {
             $obj->addError($attribute, $msg);
             return false;
         }

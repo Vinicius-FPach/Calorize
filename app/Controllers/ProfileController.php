@@ -17,10 +17,17 @@ class ProfileController extends Controller
 
     public function updateAvatar(): void
     {
+        $profile = $this->current_user->profile();
         $image = $_FILES['user_avatar'];
 
-        $this->current_user->avatar()->update($image);
-        $this->redirectTo(route('profile.show'));
+        $avatarService = $this->current_user->avatar();
+
+        if ($avatarService->update($image)) {
+            FlashMessage::success('Avatar atualizado com sucesso!');
+            $this->redirectTo(route('profile.show'));
+        } else {
+            $this->render('profile/show', compact('profile'));
+        }
     }
 
     public function newBiometric(): void

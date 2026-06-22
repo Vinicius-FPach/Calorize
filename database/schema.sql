@@ -1,5 +1,7 @@
 SET foreign_key_checks = 0;
 
+DROP TABLE IF EXISTS food_meal;
+DROP TABLE IF EXISTS meals;
 DROP TABLE IF EXISTS foods;
 DROP TABLE IF EXISTS diets;
 DROP TABLE IF EXISTS users;
@@ -77,6 +79,38 @@ CREATE TABLE foods (
     CONSTRAINT fk_foods_user
         FOREIGN KEY (user_id)
         REFERENCES users(id)
+        ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+CREATE TABLE meals (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    diet_id INT NOT NULL,
+    name VARCHAR(32) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_meals_diet_id (diet_id),
+    CONSTRAINT fk_meals_diet
+        FOREIGN KEY (diet_id)
+        REFERENCES diets(id)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+ 
+CREATE TABLE food_meal (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    meal_id INT NOT NULL,
+    food_id INT NOT NULL,
+    quantity DECIMAL(8,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_food_meal_meal_id (meal_id),
+    INDEX idx_food_meal_food_id (food_id),
+    CONSTRAINT fk_food_meal_meal
+        FOREIGN KEY (meal_id)
+        REFERENCES meals(id)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_food_meal_food
+        FOREIGN KEY (food_id)
+        REFERENCES foods(id)
         ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 

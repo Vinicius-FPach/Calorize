@@ -1,92 +1,114 @@
-<div class="max-w-4xl mx-auto">
+<div class="w-full max-w-4xl mx-auto">
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
 
-        <div class="grid md:grid-cols-2 gap-6 p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 md:items-stretch">
 
-            <div>
-                <img
-                    src="<?= $food->image()->path() ?>"
-                    alt="<?= $food->name ?>"
-                    class="w-full h-80 object-cover rounded-lg">
+            <div class="relative w-full h-96 md:h-[500px] md:border-r md:border-black/10 <?= $food->photo_url ? '' : 'bg-gray-50' ?>">
+                <?php if ($food->photo_url) : ?>
+                    <img
+                        src="<?= $food->image()->path() ?>"
+                        alt="<?= $food->name ?>"
+                        class="w-full h-full object-cover">
+                <?php else : ?>
+                    <img
+                        src="<?= $food->image()->path() ?>"
+                        alt="<?= $food->name ?>"
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 md:w-36 md:h-36 object-contain opacity-50">
+                <?php endif; ?>
+
+                <span class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm shadow-sm rounded-full text-xs font-bold uppercase tracking-wider text-gray-700">
+                    <?= $food->category ?>
+                </span>
             </div>
 
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col p-8">
 
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-800">
-                        <?= $food->name ?>
-                    </h1>
+                <h1 class="text-3xl font-bold text-gray-800 leading-tight">
+                    <?= $food->name ?>
+                </h1>
 
-                    <p class="text-sm text-gray-500">
-                        <?= $food->category ?>
-                    </p>
+                <div class="flex items-baseline gap-2 mt-6">
+                    <span class="text-5xl font-black text-primary"><?= $food->kcal ?></span>
+                    <span class="text-base font-bold text-gray-400">kcal / 100<?= $food->unit ?></span>
                 </div>
 
-                <div class="bg-primary/5 border border-primary/10 rounded-lg p-4">
-                    <p class="text-xs uppercase font-bold text-primary">
-                        Valor energético
-                    </p>
+                <div class="h-px bg-gray-100 my-6"></div>
 
-                    <p class="text-4xl font-black text-primary">
-                        <?= $food->kcal ?>
-                        <span class="text-lg font-medium">
-                            kcal
-                        </span>
-                    </p>
+                <p class="text-xs uppercase font-bold text-gray-400 tracking-wider mb-3">
+                    Macronutrientes <span class="font-normal">(por 100<?= $food->unit ?>)</span>
+                </p>
 
-                    <p class="text-xs text-gray-500">
-                        por 100<?= $food->unit ?>
-                    </p>
-                </div>
+                <div class="grid grid-cols-3 gap-3 mb-6">
 
-                <div class="grid grid-cols-3 gap-3">
-
-                    <div class="bg-gray-50 rounded-lg p-3 text-center">
-                        <p class="text-xs text-gray-400 uppercase">
-                            Proteínas
-                        </p>
-
-                        <p class="text-xl font-bold">
-                            <?= $food->protein ?>g
-                        </p>
+                    <div class="text-center">
+                        <p class="text-2xl font-bold text-gray-800"><?= $food->protein ?>g</p>
+                        <p class="text-xs text-gray-400 uppercase tracking-wide mt-0.5">Proteína</p>
                     </div>
 
-                    <div class="bg-gray-50 rounded-lg p-3 text-center">
-                        <p class="text-xs text-gray-400 uppercase">
-                            Carboidratos
-                        </p>
-
-                        <p class="text-xl font-bold">
-                            <?= $food->carbs ?>g
-                        </p>
+                    <div class="text-center border-x border-gray-100">
+                        <p class="text-2xl font-bold text-gray-800"><?= $food->carbs ?>g</p>
+                        <p class="text-xs text-gray-400 uppercase tracking-wide mt-0.5">Carbo</p>
                     </div>
 
-                    <div class="bg-gray-50 rounded-lg p-3 text-center">
-                        <p class="text-xs text-gray-400 uppercase">
-                            Gorduras
-                        </p>
-
-                        <p class="text-xl font-bold">
-                            <?= $food->fats ?>g
-                        </p>
+                    <div class="text-center">
+                        <p class="text-2xl font-bold text-gray-800"><?= $food->fats ?>g</p>
+                        <p class="text-xs text-gray-400 uppercase tracking-wide mt-0.5">Gordura</p>
                     </div>
 
                 </div>
 
-                <div class="flex gap-2 mt-4">
+                <?php
+                    // Distribuição calórica dos macros (proteína/carbo ~4 kcal/g, gordura ~9 kcal/g)
+                    $proteinKcal = $food->protein * 4;
+                    $carbsKcal   = $food->carbs * 4;
+                    $fatsKcal    = $food->fats * 9;
+                    $macroKcalTotal = $proteinKcal + $carbsKcal + $fatsKcal;
+
+                    $proteinPct = $macroKcalTotal > 0 ? round($proteinKcal / $macroKcalTotal * 100) : 0;
+                    $carbsPct   = $macroKcalTotal > 0 ? round($carbsKcal / $macroKcalTotal * 100) : 0;
+                    $fatsPct    = $macroKcalTotal > 0 ? max(0, 100 - $proteinPct - $carbsPct) : 0;
+                ?>
+
+                <?php if ($macroKcalTotal > 0) : ?>
+                    <div class="mb-6">
+                        <div class="w-full h-2 rounded-full overflow-hidden flex bg-gray-100">
+                            <div class="h-full bg-primary" style="width: <?= $proteinPct ?>%"></div>
+                            <div class="h-full bg-primary/55" style="width: <?= $carbsPct ?>%"></div>
+                            <div class="h-full bg-primary/25" style="width: <?= $fatsPct ?>%"></div>
+                        </div>
+
+                        <div class="flex gap-4 mt-2 text-xs text-gray-500">
+                            <span class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-primary"></span>
+                                <?= $proteinPct ?>% proteína
+                            </span>
+                            <span class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-primary/55"></span>
+                                <?= $carbsPct ?>% carbo
+                            </span>
+                            <span class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-primary/25"></span>
+                                <?= $fatsPct ?>% gordura
+                            </span>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <div class="flex justify-end gap-2 mt-auto pt-2">
 
                     <a
                         href="<?= route('profile.foods.edit', ['uuid' => $food->uuid]) ?>"
-                        class="px-4 py-2 bg-primary text-white rounded-lg font-semibold">
-                        Editar
+                        class="px-4 py-2 bg-primary text-white rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity">
+                        EDITAR
                     </a>
 
-                    <a
-                        href="<?= route('profile.foods.index') ?>"
-                        class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-semibold">
-                        Voltar
-                    </a>
+                    <button
+                        type="button"
+                        onclick="openModal('delete-food')"
+                        class="px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg font-semibold text-sm hover:bg-red-100 transition-colors cursor-pointer">
+                        EXCLUIR
+                    </button>
 
                 </div>
 
@@ -96,4 +118,27 @@
 
     </div>
 
+</div>
+
+<div id="delete-food" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity">
+    <div class="bg-white rounded-XL p-6 shadow-xl max-w-sm w-full mx-4 transform transition-all">
+        <div class="flex items-center gap-3 mb-3 text-red-600">
+            <i class="bi bi-exclamation-triangle text-xl"></i>
+            <h3 class="text-lg font-bold text-gray-900">Excluir alimento</h3>
+        </div>
+        <p class="text-sm text-gray-500 mb-6 leading-relaxed">
+            Tem certeza que deseja excluir <strong class="text-primary font-semibold"><?= $food->name ?></strong>? Essa ação não pode ser desfeita.
+        </p>
+        <div class="flex justify-end gap-3">
+            <button onclick="closeModal('delete-food')" class="px-4 py-2 text-sm font-black text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors cursor-pointer">
+                CANCELAR
+            </button>
+            <form action="<?= route('profile.foods.destroy', ['uuid' => $food->uuid]) ?>" method="POST" class="m-0">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit" class="px-4 py-2 text-sm font-black text-white bg-red-600 rounded-md hover:bg-red-700 shadow-sm shadow-red-200 transition-colors cursor-pointer">
+                    EXCLUIR
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
