@@ -85,6 +85,21 @@ class FoodsController extends Controller
         $this->render('profile/foods/food', compact('food', 'title'));
     }
 
+    public function favorite(Request $request): void
+    {
+        $params = $request->getParams();
+        $food = $this->current_user->foods()->findBy(['uuid' => $params['uuid']]);
+
+        if (!$food) {
+            FlashMessage::danger('Alimento não encontrado!');
+            $this->redirectTo(route('profile.foods.index'));
+            return;
+        }
+
+        $title = 'Favoritar Alimento';
+        $this->render('profile/foods/food', compact('food', 'title'));
+    }
+
     public function update(Request $request): void
     {
         $uuid = $request->getParam('uuid');

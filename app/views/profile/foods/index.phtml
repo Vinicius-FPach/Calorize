@@ -34,6 +34,9 @@
                             <a href="<?= route('profile.foods.edit', ['uuid' => $food->uuid]) ?>" class="p-1 text-gray-400 hover:text-primary rounded transition-colors" title="Editar">
                                 <i class="bi bi-pencil-square text-base flex"></i>
                             </a>
+                            <button type='submit' class="p-1 text-gray-400 hover:text-red-600 rounded transition-colors cursor-pointer" title="Excluir">
+                                <i class="bi bi-trash text-base flex"></i>
+                            </button>
                             <button onclick="openModal('delete-<?= $food->id ?>')" class="p-1 text-gray-400 hover:text-red-600 rounded transition-colors cursor-pointer" title="Excluir">
                                 <i class="bi bi-trash text-base flex"></i>
                             </button>
