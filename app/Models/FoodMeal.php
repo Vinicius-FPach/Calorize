@@ -11,13 +11,25 @@ use Core\Database\ActiveRecord\Model;
  * @property int $meal_id
  * @property ?int $food_id
  * @property float $quantity
+ * @property int $favorite
  * @property Meal $meal
  * @property Food $food
  */
 class FoodMeal extends Model
 {
     protected static string $table = 'food_meal';
-    protected static array $columns = ['meal_id', 'food_id', 'quantity'];
+    protected static array $columns = ['meal_id', 'food_id', 'quantity', 'favorite'];
+
+    public function __construct($params = [])
+    {
+        parent::__construct($params);
+
+        if ($this->favorite === null) {
+            $this->favorite = 0;
+        } else {
+            $this->favorite = 1;
+        }
+    }
 
     public function meal(): BelongsTo
     {

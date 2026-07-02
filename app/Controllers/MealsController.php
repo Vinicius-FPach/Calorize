@@ -81,6 +81,7 @@ class MealsController extends Controller
         $availableFoods = Food::searchAvailable($this->current_user->id, $search);
 
         $items = $meal->items();
+        $favorites = $meal->favorites();
         $totals = $meal->totals();
         $title = $meal->name;
 
@@ -88,6 +89,7 @@ class MealsController extends Controller
             'diet',
             'meal',
             'items',
+            'favorites',
             'totals',
             'availableFoods',
             'search',
@@ -146,6 +148,42 @@ class MealsController extends Controller
                 $foodMeal->errors('quantity')
                     ?? $foodMeal->errors('food_id')
                     ?? 'Não foi possível adicionar o alimento.'
+            );
+        }
+
+        $this->redirectTo(route('meals.show', ['diet_id' => $diet->id, 'meal_id' => $meal->id]));
+    }
+
+    public function addFavoriteFood(Request $request): void
+    {
+        $params = $request->getParams();
+        $diet = $this->findDietOrRedirect((int) $params['diet_id']);
+        if (!$diet) {
+            return;
+        }
+
+        $meal = $diet->meals()->findById((int) $params['meal_id']);
+
+        if (!$meal) {
+            FlashMessage::danger('Refeição não encontrada!');
+            $this->redirectTo(route('diets.show', ['id' => $diet->id]));
+            return;
+        }
+
+        $foodMeal = new FoodMeal([
+            'meal_id'  => $meal->id,
+            'food_id'  => $params['food_meal']['food_id'] ?? null,
+            'quantity' => $params['food_meal']['quantity'] ?? null,
+            'favorite' => $params['food_meal']['favorite'] ?? 1,
+        ]);
+
+        if ($foodMeal->save()) {
+            FlashMessage::success('Alimento favoritado!');
+        } else {
+            FlashMessage::danger(
+                $foodMeal->errors('food_id')
+                ?? $foodMeal->errors('meal_id')
+                ?? 'Não foi possível adicionar o alimento.'
             );
         }
 

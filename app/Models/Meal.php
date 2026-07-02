@@ -78,6 +78,47 @@ class Meal extends Model
     }
 
     /**
+     * @return array<int, array{food_meal_id: int, favorite: int, food: Food}>
+     */
+    public function favorites(): array
+    {
+        $sql = <<<SQL
+            SELECT
+                food_meal.id AS food_meal_id,
+                food_meal.favorite AS favorite,
+                foods.id, foods.uuid, foods.user_id, foods.name, foods.kcal,
+                foods.carbs, foods.fats, foods.protein, foods.unit,
+                foods.category, foods.is_global, foods.photo_url,
+                foods.moderation_status, foods.moderated_at
+            FROM food_meal
+            INNER JOIN foods ON foods.id = food_meal.food_id
+            WHERE food_meal.meal_id = :meal_id AND food_meal.favorite = 1
+        SQL;
+
+        $pdo = Database::getDatabaseConn();
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':meal_id', $this->id);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $favorites = [];
+        foreach ($rows as $row) {
+            $foodMealId = (int) $row['food_meal_id'];
+            $favorite = (int) $row['favorite'];
+
+            unset($row['food_meal_id'], $row['favorite']);
+
+            $favorites[] = [
+                'food_meal_id' => $foodMealId,
+                'favorite' => $favorite,
+                'food' => new Food($row),
+            ];
+        }
+
+        return $favorites;
+    }
+
+    /**
      * @return array{kcal: float, carbs: float, fats: float, protein: float}
      */
     public function totals(): array

@@ -100,6 +100,7 @@ CREATE TABLE food_meal (
     meal_id INT NOT NULL,
     food_id INT NOT NULL,
     quantity DECIMAL(8,2) NOT NULL,
+    favorite BOOLEAN NULL DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_food_meal_meal_id (meal_id),

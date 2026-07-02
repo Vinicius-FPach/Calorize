@@ -66,6 +66,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/diets/{diet_id}/meals/{meal_id}', [MealsController::class, 'destroy'])->name('meals.destroy');
 
     Route::post('/diets/{diet_id}/meals/{meal_id}/foods', [MealsController::class, 'addFood'])->name('meals.foods.add');
+    Route::post('/diets/{diet_id}/meals/{meal_id}/foods', [MealsController::class, 'addFavoriteFood'])->name('meals.foods.addFavorite');
 
     Route::delete('/food_meal/{food_meal_id}', [MealsController::class, 'removeFood'])->name('food_meal.destroy');
 });
