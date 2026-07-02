@@ -180,6 +180,7 @@
 
                     <form action="<?= route('meals.foods.addFavorite', ['diet_id' => $diet->id, 'meal_id' => $meal->id]) ?>" method="POST" class="flex items-center gap-2">
                         <input type="hidden" name="food_meal[food_id]" value="<?= $food->id ?>">
+                        <input type="hidden" name="food_meal[quantity]" value=0.01>
                         <button type="submit" class="px-3 py-1 bg-primary text-white font-black text-xs rounded-md hover:opacity-90 cursor-pointer transition-colors">
                                 <i class="bi bi-egg-fried"></i>
                         </button>
