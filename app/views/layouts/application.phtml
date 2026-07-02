@@ -43,6 +43,10 @@
             class="text-md font-medium border-b-2 transition-colors <?= str_starts_with($_SERVER['REQUEST_URI'], '/profile/foods') ? 'border-primary text-primary' : 'border-transparent text-black hover:text-gray-600' ?>">
                 Meus Alimentos
             </a>
+            <a href="<?= route('profile.foods.favorite') ?>"
+            class="text-md font-medium border-b-2 transition-colors <?= str_starts_with($_SERVER['REQUEST_URI'], '/profile/foods') ? 'border-primary text-primary' : 'border-transparent text-black hover:text-gray-600' ?>">
+                Favoritos
+            </a>
 
             <a href="<?= route('profile.show') ?>"
             class="text-md font-medium border-b-2 transition-colors <?= $_SERVER['REQUEST_URI'] === '/profile' || (str_starts_with($_SERVER['REQUEST_URI'], '/profile') && !str_starts_with($_SERVER['REQUEST_URI'], '/profile/foods')) ? 'border-primary text-primary' : 'border-transparent text-black hover:text-gray-600' ?>">

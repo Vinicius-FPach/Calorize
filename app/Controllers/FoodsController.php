@@ -26,6 +26,17 @@ class FoodsController extends Controller
         $this->render('profile/foods/index', compact('foods', 'paginator'));
     }
 
+    public function favoriteIndex(Request $request): void
+    {
+        $paginator = $this->current_user->foods()->paginate(
+            page: $request->getParam('page', 1),
+            per_page: 8,
+            route: 'profile.favorite.paginate'
+        );
+        $foods = $paginator->registers();
+        $this->render('profile/foods/favorite', compact('foods', 'paginator'));
+    }
+
     public function new(): void
     {
         $food = $this->current_user->foods()->new();
@@ -162,6 +173,26 @@ class FoodsController extends Controller
         $food->destroy();
 
         FlashMessage::success('Alimento removido com sucesso!');
+        $this->redirectTo(route('profile.foods.index'));
+    }
+
+    public function favorite(Request $request): void
+    {
+        $uuid = $request->getParam('uuid');
+        $params = $request->getParam('food');
+
+        $food = $this->current_user->foods()->findBy(['uuid' => $uuid]);
+
+        $fav = $food->favorite;
+
+        if (!$fav) {
+            $food->favorite = true;
+            $food-save();
+        }
+        elseif($fav) {
+            $food->favorite = false;
+            $food-save();
+        }
         $this->redirectTo(route('profile.foods.index'));
     }
 }

@@ -14,6 +14,7 @@ use PDO;
  * @property string $uuid
  * @property int|null $user_id
  * @property string $name
+ * @property int $favorite
  * @property float $kcal
  * @property float $carbs
  * @property float $fats
@@ -30,7 +31,7 @@ class Food extends Model
 {
     protected static string $table = 'foods';
     protected static array $columns = [
-        'uuid', 'user_id', 'name', 'kcal', 'carbs', 'fats',
+        'uuid', 'user_id', 'name', 'favorite', 'kcal', 'carbs', 'fats',
         'protein', 'unit', 'category', 'is_global',
         'photo_url', 'moderation_status', 'moderated_at'
     ];
