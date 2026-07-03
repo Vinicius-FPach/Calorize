@@ -70,4 +70,20 @@ class Diet extends Model
             'carbs'      => $calculator->carbs(),
         ]);
     }
+
+    /**
+     * @return array{kcal: float, carbs: float, fats: float, protein: float}
+     */
+    public function totals(): array
+    {
+        $totals = ['kcal' => 0.0, 'carbs' => 0.0, 'fats' => 0.0, 'protein' => 0.0];
+
+        foreach ($this->meals()->get() as $meal) {
+            foreach ($meal->totals() as $key => $value) {
+                $totals[$key] += $value;
+            }
+        }
+
+        return $totals;
+    }
 }

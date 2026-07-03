@@ -145,6 +145,7 @@ class MealsController extends Controller
             FlashMessage::danger(
                 $foodMeal->errors('quantity')
                     ?? $foodMeal->errors('food_id')
+                    ?? $foodMeal->errors('meal_id')
                     ?? 'Não foi possível adicionar o alimento.'
             );
         }
