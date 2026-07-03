@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS foods;
 DROP TABLE IF EXISTS diets;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS profiles;
+DROP TABLE IF EXISTS favorite_foods;
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -112,6 +113,29 @@ CREATE TABLE food_meal (
         FOREIGN KEY (food_id)
         REFERENCES foods(id)
         ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+CREATE TABLE favorite_foods (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    food_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    INDEX idx_favorite_foods_user_id (user_id),
+    INDEX idx_favorite_foods_food_id (food_id),
+
+    CONSTRAINT fk_favorite_foods_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_favorite_foods_food
+        FOREIGN KEY (food_id)
+        REFERENCES foods(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT uq_favorite_foods_user_food
+        UNIQUE (user_id, food_id)
 ) ENGINE=InnoDB;
 
 SET foreign_key_checks = 1;

@@ -48,6 +48,21 @@ class User extends Model
         return $this->hasMany(Food::class, 'user_id');
     }
 
+    public function favoriteFoods(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Food::class,
+            'favorite_foods',
+            'user_id',
+            'food_id'
+        );
+    }
+
+    public function isFavorite(Food $food): bool
+    {
+        return FavoriteFood::isFavorite($this->id, $food->id);
+    }
+    
     public function validates(): void
     {
         Validations::notEmpty('name', $this);

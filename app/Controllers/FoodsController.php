@@ -7,6 +7,7 @@ use Core\Http\Request;
 use Lib\FlashMessage;
 use App\Models\Food;
 use App\Services\FoodImage;
+use App\Models\FavoriteFood;
 
 class FoodsController extends Controller
 {
@@ -22,8 +23,19 @@ class FoodsController extends Controller
             per_page: 8,
             route: 'profile.foods.paginate'
         );
+
         $foods = $paginator->registers();
-        $this->render('profile/foods/index', compact('foods', 'paginator'));
+
+        $favoriteIds = array_map(
+            fn($food) => $food->id,
+            $this->current_user->favoriteFoods()->get()
+        );
+
+        $this->render('profile/foods/index', compact(
+            'foods',
+            'paginator',
+            'favoriteIds'
+        ));
     }
 
     public function new(): void
@@ -88,7 +100,9 @@ class FoodsController extends Controller
     public function favorite(Request $request): void
     {
         $params = $request->getParams();
-        $food = $this->current_user->foods()->findBy(['uuid' => $params['uuid']]);
+        $uuid = $params['uuid'] ?? null;
+
+        $food = Food::findBy(['uuid' => $uuid]);
 
         if (!$food) {
             FlashMessage::danger('Alimento não encontrado!');
@@ -96,8 +110,38 @@ class FoodsController extends Controller
             return;
         }
 
-        $title = 'Favoritar Alimento';
-        $this->render('profile/foods/food', compact('food', 'title'));
+        $isFavorite = FavoriteFood::isFavorite($this->current_user->id, $food->id);
+
+        if ($isFavorite) {
+            FavoriteFood::unfavorite($this->current_user->id, $food->id);
+            FlashMessage::success('Alimento removido dos favoritos.');
+        } else {
+            FavoriteFood::favorite($this->current_user->id, $food->id);
+            FlashMessage::success('Alimento adicionado aos favoritos.');
+        }
+
+        $this->redirectTo(route('profile.foods.index'));
+    }
+
+    public function favorites(Request $request): void
+    {
+        $favorites = FavoriteFood::where([
+            'user_id' => $this->current_user->id
+        ]);
+
+        $foods = [];
+
+        foreach ($favorites as $favorite) {
+            $food = Food::findById($favorite->food_id);
+
+            if ($food) {
+                $foods[] = $food;
+            }
+        }
+
+        $title = 'Alimentos Favoritos';
+
+        $this->render('profile/foods/favorites', compact('foods', 'title'));
     }
 
     public function update(Request $request): void

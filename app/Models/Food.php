@@ -8,6 +8,8 @@ use Core\Database\Database;
 use Lib\Validations;
 use Core\Database\ActiveRecord\Model;
 use PDO;
+use App\Models\FavoriteFood;
+use App\Models\User;
 
 /**
  * @property int $id
@@ -126,5 +128,11 @@ class Food extends Model
         }
 
         return $foods;
+    }
+
+    
+    public function isFavoritedBy(User $user): bool
+    {
+        return FavoriteFood::isFavorite($user->id, $this->id);
     }
 }
