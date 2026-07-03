@@ -51,15 +51,15 @@ Route::middleware('auth')->group(function () {
 
     // Users private food (profile)
     Route::get('/profile/foods', [FoodsController::class, 'userIndex'])->name('profile.foods.index');
-    Route::get('/profile/foods', [FoodsController::class, 'favoriteIndex'])->name('profile.foods.favorite');
+    Route::get('/profile/foods/favorites', [FoodsController::class, 'favoriteIndex'])->name('profile.foods.favorite');
     Route::get('/profile/foods/page/{page}', [FoodsController::class, 'userIndex'])->name('profile.foods.paginate');
-    Route::get('/profile/foods/page/{page}', [FoodsController::class, 'favoriteIndex'])->name('profile.favorite.paginate');
+    Route::get('/profile/foods/favorites/page/{page}', [FoodsController::class, 'favoriteIndex'])->name('profile.favorite.paginate');
     Route::get('/profile/foods/new', [FoodsController::class, 'new'])->name('profile.foods.new');
     Route::post('/profile/foods', [FoodsController::class, 'create'])->name('profile.foods.create');
     Route::get('/profile/foods/{uuid}', [FoodsController::class, 'show'])->name('profile.foods.show');
     Route::get('/profile/foods/{uuid}/edit', [FoodsController::class, 'edit'])->name('profile.foods.edit');
     Route::put('/profile/foods/{uuid}', [FoodsController::class, 'update'])->name('profile.foods.update');
-    Route::put('/profile/foods/{uuid}', [FoodsController::class, 'favorite'])->name('profile.foods.favorited');
+    Route::put('/profile/foods/{uuid}/favorite', [FoodsController::class, 'favorite'])->name('profile.foods.favorited');
     Route::delete('/profile/foods/{uuid}', [FoodsController::class, 'destroy'])->name('profile.foods.destroy');
 
     // Meals

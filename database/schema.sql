@@ -64,7 +64,7 @@ CREATE TABLE foods (
     uuid VARCHAR(16) NOT NULL UNIQUE,
     user_id INT NULL,
     name VARCHAR(32) NOT NULL,
-    favorite BOOLEAN NOT NULL DEFAULT FALSE,
+    favorite BOOLEAN DEFAULT FALSE,
     kcal DECIMAL(8,2) NOT NULL,
     carbs DECIMAL(8,2) NOT NULL,
     fats DECIMAL(8,2) NOT NULL,

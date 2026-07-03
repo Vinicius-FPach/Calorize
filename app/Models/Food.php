@@ -6,6 +6,7 @@ use App\Services\FoodImage;
 use Core\Database\ActiveRecord\BelongsTo;
 use Core\Database\Database;
 use Lib\Validations;
+use Lib\Paginator;
 use Core\Database\ActiveRecord\Model;
 use PDO;
 
@@ -128,4 +129,25 @@ class Food extends Model
 
         return $foods;
     }
+
+    public static function paginateFavorites(
+    int $userId,
+    int $page,
+    int $perPage,
+    string $route
+): Paginator
+{
+    return new Paginator(
+        class: static::class,
+        page: $page,
+        per_page: $perPage,
+        table: static::table(),
+        attributes: static::columns(),
+        conditions: [
+            'user_id' => $userId,
+            'favorite' => 1
+        ],
+        route: $route
+    );
+}
 }

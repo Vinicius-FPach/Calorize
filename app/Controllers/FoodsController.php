@@ -27,15 +27,18 @@ class FoodsController extends Controller
     }
 
     public function favoriteIndex(Request $request): void
-    {
-        $paginator = $this->current_user->foods()->paginate(
-            page: $request->getParam('page', 1),
-            per_page: 8,
-            route: 'profile.favorite.paginate'
-        );
-        $foods = $paginator->registers();
-        $this->render('profile/foods/favorite', compact('foods', 'paginator'));
-    }
+{
+    $paginator = Food::paginateFavorites(
+        userId: $this->current_user->id,
+        page: $request->getParam('page', 1),
+        perPage: 8,
+        route: 'profile.favorite.paginate'
+    );
+
+    $foods = $paginator->registers();
+
+    $this->render('profile/foods/favorite', compact('foods', 'paginator'));
+}
 
     public function new(): void
     {
@@ -183,16 +186,19 @@ class FoodsController extends Controller
 
         $food = $this->current_user->foods()->findBy(['uuid' => $uuid]);
 
-        $fav = $food->favorite;
+        $food->favorite = $food->favorite ? 0 : 1;
+        $food->save();
 
-        if (!$fav) {
-            $food->favorite = true;
-            $food-save();
-        }
-        elseif($fav) {
-            $food->favorite = false;
-            $food-save();
-        }
-        $this->redirectTo(route('profile.foods.index'));
+        $redirect = $_SERVER['HTTP_REFERER'] ?? route('profile.foods.index');
+
+        $this->redirectTo($redirect);
     }
+
+    public static function favoritesByUser(int $userId): array
+{
+    return static::where([
+        'user_id' => $userId,
+        'favorite' => true
+    ]);
+}
 }

@@ -37,9 +37,13 @@
                             <button onclick="openModal('delete-<?= $food->id ?>')" class="p-1 text-gray-400 hover:text-red-600 rounded transition-colors cursor-pointer" title="Excluir">
                                 <i class="bi bi-trash text-base flex"></i>
                             </button>
-                            <button onclick="<?= route('profile.foods.destroy', ['uuid' => $food->uuid]) ?>" method="POST" class="p-1 text-gray-400 hover:text-red-600 rounded transition-colors cursor-pointer" title="Favoritar">
-                                <i class="bi bi-trash text-base flex"></i>
-                            </button>
+                            <form action="<?= route('profile.foods.favorited', ['uuid' => $food->uuid]) ?>" method="POST">
+                                <input type="hidden" name="_method" value="PUT">
+
+                                <button type="submit" title="Favoritar">
+                                    <i class="bi bi-star<?= $food->favorite ? '-fill' : '' ?>"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
                     
