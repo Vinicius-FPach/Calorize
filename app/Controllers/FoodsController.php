@@ -193,12 +193,4 @@ class FoodsController extends Controller
 
         $this->redirectTo($redirect);
     }
-
-    public static function favoritesByUser(int $userId): array
-{
-    return static::where([
-        'user_id' => $userId,
-        'favorite' => true
-    ]);
-}
 }
