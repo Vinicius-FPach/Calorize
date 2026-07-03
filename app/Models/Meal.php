@@ -45,13 +45,14 @@ class Meal extends Model
             SELECT
                 food_meal.id AS food_meal_id,
                 food_meal.quantity AS quantity,
+                food_meal.favorite AS favorite,
                 foods.id, foods.uuid, foods.user_id, foods.name, foods.kcal,
                 foods.carbs, foods.fats, foods.protein, foods.unit,
                 foods.category, foods.is_global, foods.photo_url,
                 foods.moderation_status, foods.moderated_at
             FROM food_meal
             INNER JOIN foods ON foods.id = food_meal.food_id
-            WHERE food_meal.meal_id = :meal_id
+            WHERE food_meal.meal_id = :meal_id AND food_meal.favorite = 0
         SQL;
 
         $pdo = Database::getDatabaseConn();
@@ -64,12 +65,14 @@ class Meal extends Model
         foreach ($rows as $row) {
             $foodMealId = (int) $row['food_meal_id'];
             $quantity = (float) $row['quantity'];
+            $favorite = (int) $row['favorite'];
 
-            unset($row['food_meal_id'], $row['quantity']);
+            unset($row['food_meal_id'], $row['quantity'], $row['favorite']);
 
             $items[] = [
                 'food_meal_id' => $foodMealId,
                 'quantity' => $quantity,
+                'favorite' => $favorite,
                 'food' => new Food($row),
             ];
         }
@@ -85,6 +88,7 @@ class Meal extends Model
         $sql = <<<SQL
             SELECT
                 food_meal.id AS food_meal_id,
+                food_meal.quantity AS quantity,
                 food_meal.favorite AS favorite,
                 foods.id, foods.uuid, foods.user_id, foods.name, foods.kcal,
                 foods.carbs, foods.fats, foods.protein, foods.unit,
@@ -104,12 +108,14 @@ class Meal extends Model
         $favorites = [];
         foreach ($rows as $row) {
             $foodMealId = (int) $row['food_meal_id'];
+            $quantity = (float) $row['quantity'];
             $favorite = (int) $row['favorite'];
 
-            unset($row['food_meal_id'], $row['favorite']);
+            unset($row['food_meal_id'], $row['quantity'], $row['favorite']);
 
             $favorites[] = [
                 'food_meal_id' => $foodMealId,
+                'quantity' => $quantity,
                 'favorite' => $favorite,
                 'food' => new Food($row),
             ];

@@ -26,8 +26,6 @@ class FoodMeal extends Model
 
         if ($this->favorite === null) {
             $this->favorite = 0;
-        } else {
-            $this->favorite = 1;
         }
     }
 

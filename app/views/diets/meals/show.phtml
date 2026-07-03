@@ -114,33 +114,20 @@
                 <li class="flex items-center justify-between py-3">
                     <div>
                         <p class="text-sm font-semibold text-gray-800"><?= $favorite['food']->name ?></p>
+                        <p class="text-xs text-gray-500">
+                            <?= number_format($favorite['quantity'], 2) ?><?= $favorite['food']->unit ?>
+                            &middot;
+                            <?= number_format($favorite['food']->kcal * $favorite['quantity'] / 100, 2) ?> kcal
+                        </p>
                     </div>
 
-                    <button onclick="openModal('delete-item-<?= $favorite['food_meal_id'] ?>')" class="text-red-600 hover:text-red-800 cursor-pointer">
-                        <i class="bi bi-x-lg"></i>
-                    </button>
+                    <form action="<?= route('food_meal.favorite', ['food_meal_id' => $favorite['food_meal_id']]) ?>" method="POST" class="m-0">
+                        <input type="hidden" name="_method" value="PUT">
+                        <button type="submit" class="px-3 py-1 bg-red-800 text-white font-black text-xs rounded-md hover:opacity-90 cursor-pointer transition-colors">
+                            <i class="bi bi-hand-thumbs-down-fill"></i>
+                        </button>
+                    </form>
                 </li>
-
-                <div id="delete-item-<?= $favorite['food_meal_id'] ?>" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity">
-                    <div class="bg-white rounded-XL p-6 shadow-xl max-w-sm w-full mx-4 transform transition-all">
-                        <div class="flex items-center gap-3 mb-3 text-red-600">
-                            <i class="bi bi-exclamation-triangle text-xl"></i>
-                            <h3 class="text-lg font-bold text-gray-900">Remover alimento</h3>
-                        </div>
-                        <p class="text-sm text-gray-500 mb-6 leading-relaxed">Remover <strong class="text-primary font-semibold"><?= $favorite['food']->name ?></strong> desta refeição?</p>
-                        <div class="flex justify-end gap-3">
-                            <button onclick="closeModal('delete-item-<?= $favorite['food_meal_id'] ?>')" class="px-4 py-2 text-sm font-black text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors cursor-pointer">
-                                CANCELAR
-                            </button>
-                            <form action="<?= route('food_meal.destroy', ['food_meal_id' => $favorite['food_meal_id']]) ?>" method="POST" class="m-0">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button type="submit" class="px-4 py-2 text-sm font-black text-white bg-red-600 rounded-md hover:bg-red-700 shadow-sm shadow-red-200 transition-colors cursor-pointer">
-                                    REMOVER
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
             <?php endforeach; ?>
         </ul>
     <?php endif; ?>
@@ -180,9 +167,10 @@
 
                     <form action="<?= route('meals.foods.addFavorite', ['diet_id' => $diet->id, 'meal_id' => $meal->id]) ?>" method="POST" class="flex items-center gap-2">
                         <input type="hidden" name="food_meal[food_id]" value="<?= $food->id ?>">
-                        <input type="hidden" name="food_meal[quantity]" value=0.01>
+                        <input type="hidden" name="food_meal[quantity]" value="100">
+                        <input type="hidden" name="food_meal[favorite]" value="1">
                         <button type="submit" class="px-3 py-1 bg-primary text-white font-black text-xs rounded-md hover:opacity-90 cursor-pointer transition-colors">
-                                <i class="bi bi-egg-fried"></i>
+                            <i class="bi bi-hand-thumbs-up-fill"></i>
                         </button>
                     </form>
                 </li>

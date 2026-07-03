@@ -155,6 +155,31 @@ class MealsController extends Controller
         $this->redirectTo(route('meals.show', ['diet_id' => $diet->id, 'meal_id' => $meal->id]));
     }
 
+    public function toggleFavorite(Request $request): void
+    {
+        $params = $request->getParams();
+        $foodMeal = FoodMeal::findById((int) $params['food_meal_id']);
+
+        if (!$foodMeal) {
+            FlashMessage::danger('Item não encontrado!');
+            $this->redirectTo(route('diets.index'));
+            return;
+        }
+
+        $meal = $foodMeal->meal;
+
+        $foodMeal->favorite = $foodMeal->favorite ? 0 : 1;
+
+        if ($foodMeal->favorite === 0) {
+            $foodMeal->destroy();
+        } else {
+            $foodMeal->save();
+        }
+
+        FlashMessage::success($foodMeal->favorite ? 'Alimento favoritado!' : 'Alimento desfavoritado!');
+        $this->redirectTo(route('meals.show', ['diet_id' => $meal->diet_id, 'meal_id' => $meal->id]));
+    }
+
     public function addFavoriteFood(Request $request): void
     {
         $params = $request->getParams();
@@ -171,11 +196,23 @@ class MealsController extends Controller
             return;
         }
 
+        $existing = FoodMeal::where([
+            'meal_id' => $meal->id,
+            'food_id' => $params['food_meal']['food_id'] ?? null,
+            'favorite' => 1,
+        ]);
+
+        if (!empty($existing)) {
+            FlashMessage::danger('Este alimento já está favoritado nesta refeição!');
+            $this->redirectTo(route('meals.show', ['diet_id' => $diet->id, 'meal_id' => $meal->id]));
+            return;
+        }
+
         $foodMeal = new FoodMeal([
             'meal_id'  => $meal->id,
             'food_id'  => $params['food_meal']['food_id'] ?? null,
-            'quantity' => $params['food_meal']['quantity'] ?? null,
-            'favorite' => $params['food_meal']['favorite'] ?? 1,
+            'quantity' => 100,
+            'favorite' => 1,
         ]);
 
         if ($foodMeal->save()) {
@@ -184,7 +221,7 @@ class MealsController extends Controller
             FlashMessage::danger(
                 $foodMeal->errors('food_id')
                 ?? $foodMeal->errors('meal_id')
-                ?? 'Não foi possível adicionar o alimento.'
+                ?? 'Não foi possível favoritar o alimento.'
             );
         }
 
