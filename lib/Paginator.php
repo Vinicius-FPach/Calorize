@@ -23,7 +23,6 @@ class Paginator
         private array $attributes,
         private array $conditions = [],
         private ?string $route = null
-        private array $rawConditions = []
     ) {
         $this->loadTotals();
         $this->loadRegisters();
