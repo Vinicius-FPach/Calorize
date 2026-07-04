@@ -78,7 +78,10 @@ class Diet extends Model
     {
         $totals = ['kcal' => 0.0, 'carbs' => 0.0, 'fats' => 0.0, 'protein' => 0.0];
 
-        foreach ($this->meals()->get() as $meal) {
+        /** @var Meal[] $meals */
+        $meals = $this->meals()->get();
+
+        foreach ($meals as $meal) {
             foreach ($meal->totals() as $key => $value) {
                 $totals[$key] += $value;
             }
