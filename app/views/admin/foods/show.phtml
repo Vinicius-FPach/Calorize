@@ -1,0 +1,127 @@
+<div class="w-full max-w-4xl mx-auto pb-6">
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 md:items-stretch">
+
+            <div class="relative w-full h-96 md:h-[500px] md:border-r md:border-black/10 <?= $food->photo_url ? '' : 'bg-gray-50' ?>">
+                <?php if ($food->photo_url) : ?>
+                    <img src="<?= $food->image()->path() ?>" alt="<?= $food->name ?>" class="w-full h-full object-cover">
+                <?php else : ?>
+                    <img src="<?= $food->image()->path() ?>" alt="<?= $food->name ?>"
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 md:w-36 md:h-36 object-contain opacity-50">
+                <?php endif; ?>
+
+                <span class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm shadow-sm rounded-full text-xs font-bold uppercase tracking-wider text-gray-700">
+                    <?= $food->category ?>
+                </span>
+            </div>
+
+            <div class="flex flex-col p-8">
+
+                <div class="flex items-center justify-between gap-2 mb-2">
+                    <p class="text-xs text-gray-400">Cadastrado por <span class="font-semibold text-gray-600"><?= $food->user->name ?></span></p>
+                    <span class="text-xs font-black px-2 py-1 rounded-full shadow-sm
+                        <?php if ($food->moderation_status === 'PENDENTE') : ?>
+                            bg-yellow-100 text-yellow-600
+                        <?php elseif ($food->moderation_status === 'APROVADO') : ?>
+                            bg-green-100 text-green-600
+                        <?php else : ?>
+                            bg-red-100 text-red-600
+                        <?php endif; ?>">
+                        <?= $food->moderation_status ?>
+                    </span>
+                </div>
+
+                <h1 class="text-3xl font-bold text-gray-800 leading-tight">
+                    <?= $food->name ?>
+                </h1>
+
+                <div class="flex items-baseline gap-2 mt-6">
+                    <span class="text-5xl font-black text-primary"><?= $food->kcal ?></span>
+                    <span class="text-base font-bold text-gray-400">kcal / 100<?= $food->unit ?></span>
+                </div>
+
+                <div class="h-px bg-gray-100 my-6"></div>
+
+                <p class="text-xs uppercase font-bold text-gray-400 tracking-wider mb-3">
+                    Macronutrientes <span class="font-normal">(por 100<?= $food->unit ?>)</span>
+                </p>
+
+                <div class="grid grid-cols-3 gap-3 mb-6">
+                    <div class="text-center">
+                        <p class="text-2xl font-bold text-gray-800"><?= $food->protein ?>g</p>
+                        <p class="text-xs text-gray-400 uppercase tracking-wide mt-0.5">Proteína</p>
+                    </div>
+                    <div class="text-center border-x border-gray-100">
+                        <p class="text-2xl font-bold text-gray-800"><?= $food->carbs ?>g</p>
+                        <p class="text-xs text-gray-400 uppercase tracking-wide mt-0.5">Carbo</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-2xl font-bold text-gray-800"><?= $food->fats ?>g</p>
+                        <p class="text-xs text-gray-400 uppercase tracking-wide mt-0.5">Gordura</p>
+                    </div>
+                </div>
+
+                <?php
+                    $proteinKcal = $food->protein * 4;
+                    $carbsKcal   = $food->carbs * 4;
+                    $fatsKcal    = $food->fats * 9;
+                    $macroKcalTotal = $proteinKcal + $carbsKcal + $fatsKcal;
+
+                    $proteinPct = $macroKcalTotal > 0 ? round($proteinKcal / $macroKcalTotal * 100) : 0;
+                    $carbsPct   = $macroKcalTotal > 0 ? round($carbsKcal / $macroKcalTotal * 100) : 0;
+                    $fatsPct    = $macroKcalTotal > 0 ? max(0, 100 - $proteinPct - $carbsPct) : 0;
+                ?>
+
+                <?php if ($macroKcalTotal > 0) : ?>
+                    <div class="mb-6">
+                        <div class="w-full h-2 rounded-full overflow-hidden flex bg-gray-100">
+                            <div class="h-full bg-primary" style="width: <?= $proteinPct ?>%"></div>
+                            <div class="h-full bg-primary/55" style="width: <?= $carbsPct ?>%"></div>
+                            <div class="h-full bg-primary/25" style="width: <?= $fatsPct ?>%"></div>
+                        </div>
+                        <div class="flex gap-4 mt-2 text-xs text-gray-500">
+                            <span class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-primary"></span>
+                                <?= $proteinPct ?>% proteína
+                            </span>
+                            <span class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-primary/55"></span>
+                                <?= $carbsPct ?>% carbo
+                            </span>
+                            <span class="flex items-center gap-1.5">
+                                <span class="w-2 h-2 rounded-full bg-primary/25"></span>
+                                <?= $fatsPct ?>% gordura
+                            </span>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <div class="flex justify-end gap-2 mt-auto pt-2">
+                    <?php if ($food->moderation_status !== 'APROVADO') : ?>
+                        <form action="<?= route('admin.foods.approve', ['uuid' => $food->uuid]) ?>" method="POST" class="m-0">
+                            <input type="hidden" name="_method" value="PUT">
+                            <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity cursor-pointer">
+                                APROVAR
+                            </button>
+                        </form>
+                    <?php endif; ?>
+
+                    <?php if ($food->moderation_status !== 'REJEITADO') : ?>
+                        <form action="<?= route('admin.foods.reject', ['uuid' => $food->uuid]) ?>" method="POST" class="m-0">
+                            <input type="hidden" name="_method" value="PUT">
+                            <button type="submit" class="px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg font-semibold text-sm hover:bg-red-100 transition-colors cursor-pointer">
+                                REJEITAR
+                            </button>
+                        </form>
+                    <?php endif; ?>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

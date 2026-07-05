@@ -8,11 +8,7 @@ class HomeController extends Controller
 {
     public function index(): void
     {
-        if ($this->current_user->is_admin) {
-            $this->redirectTo(route('admin.index'));
-        } else {
-            $title = '';
-            $this->render('home/index', compact('title'));
-        }
+        $title = '';
+        $this->render('home/index', compact('title'));
     }
 }

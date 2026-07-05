@@ -1,3 +1,92 @@
-<div class="flex items-center justify-center h-96">
-    <h1 class="text-8xl font-bold text-gray-800">ADMIN</h1>
+<div class="bg-white border border-gray-200 rounded-lg p-6">
+
+    <div class="flex flex-wrap gap-2 mb-6">
+        <a href="<?= route('admin.index') ?>"
+            class="px-4 py-2 text-xs font-black rounded-md <?= $status === '' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?>">
+            TODOS
+        </a>
+        <a href="<?= route('admin.index') ?>?status=PENDENTE"
+            class="px-4 py-2 text-xs font-black rounded-md <?= $status === 'PENDENTE' ? 'bg-yellow-400 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?>">
+            PENDENTES
+        </a>
+        <a href="<?= route('admin.index') ?>?status=APROVADO"
+            class="px-4 py-2 text-xs font-black rounded-md <?= $status === 'APROVADO' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?>">
+            APROVADOS
+        </a>
+        <a href="<?= route('admin.index') ?>?status=REJEITADO"
+            class="px-4 py-2 text-xs font-black rounded-md <?= $status === 'REJEITADO' ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?>">
+            REJEITADOS
+        </a>
+    </div>
+
+    <?php if (empty($foods)) : ?>
+        <p class="text-sm text-gray-400">Nenhum alimento encontrado.</p>
+    <?php else : ?>
+
+        <!-- Tabela para desktop -->
+        <div class="hidden md:!block overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="border-b border-gray-100">
+                        <th class="text-left py-2 font-semibold text-gray-600">Alimento</th>
+                        <th class="text-left py-2 font-semibold text-gray-600">Categoria</th>
+                        <th class="text-left py-2 font-semibold text-gray-600">Kcal</th>
+                        <th class="text-left py-2 font-semibold text-gray-600">Usuário</th>
+                        <th class="text-left py-2 font-semibold text-gray-600">Status</th>
+                        <th class="text-left py-2 font-semibold text-gray-600"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <?php foreach ($foods as $food) : ?>
+                        <tr>
+                            <td class="py-3 font-semibold text-gray-800"><?= $food->name ?></td>
+                            <td class="py-3 text-gray-500"><?= $food->category ?></td>
+                            <td class="py-3 text-gray-500"><?= $food->kcal ?> kcal/100<?= $food->unit ?></td>
+                            <td class="py-3 text-gray-500"><?= $food->user->name ?></td>
+                            <td class="py-3">
+                                <?php if ($food->moderation_status === 'PENDENTE') : ?>
+                                    <span class="text-xs font-black px-2 py-1 rounded-full bg-yellow-100 text-yellow-600">PENDENTE</span>
+                                <?php elseif ($food->moderation_status === 'APROVADO') : ?>
+                                    <span class="text-xs font-black px-2 py-1 rounded-full bg-green-100 text-green-600">APROVADO</span>
+                                <?php else : ?>
+                                    <span class="text-xs font-black px-2 py-1 rounded-full bg-red-100 text-red-600">REJEITADO</span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="py-3">
+                                <a href="<?= route('admin.foods.show', ['uuid' => $food->uuid]) ?>" class="text-gray-400 hover:text-primary">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Cards para mobile -->
+        <ul class="md:hidden divide-y divide-gray-100">
+            <?php foreach ($foods as $food) : ?>
+                <li class="py-4 flex items-center justify-between gap-4">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-800"><?= $food->name ?></p>
+                        <p class="text-xs text-gray-500"><?= $food->category ?> &middot; <?= $food->kcal ?> kcal/100<?= $food->unit ?></p>
+                        <p class="text-xs text-gray-500"><?= $food->user->name ?></p>
+                    </div>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <?php if ($food->moderation_status === 'PENDENTE') : ?>
+                            <span class="text-xs font-black px-2 py-1 rounded-full bg-yellow-100 text-yellow-600">PENDENTE</span>
+                        <?php elseif ($food->moderation_status === 'APROVADO') : ?>
+                            <span class="text-xs font-black px-2 py-1 rounded-full bg-green-100 text-green-600">APROVADO</span>
+                        <?php else : ?>
+                            <span class="text-xs font-black px-2 py-1 rounded-full bg-red-100 text-red-600">REJEITADO</span>
+                        <?php endif; ?>
+                        <a href="<?= route('admin.foods.show', ['uuid' => $food->uuid]) ?>" class="text-gray-400 hover:text-primary">
+                            <i class="bi bi-eye"></i>
+                        </a>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+
+    <?php endif; ?>
 </div>

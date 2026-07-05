@@ -127,4 +127,40 @@ class Food extends Model
 
         return $foods;
     }
+
+    /**
+     * @return array<int, Food>
+     */
+    public static function allForAdmin(string $status = ''): array
+    {
+        $sql = <<<SQL
+            SELECT id, uuid, user_id, name, kcal, carbs, fats, protein,
+                unit, category, is_global, photo_url, moderation_status, moderated_at
+            FROM foods
+            WHERE user_id IS NOT NULL
+        SQL;
+
+        if ($status) {
+            $sql .= " AND moderation_status = :status";
+        }
+
+        $sql .= " ORDER BY FIELD(moderation_status, 'PENDENTE', 'APROVADO', 'REJEITADO'), name ASC";
+
+        $pdo = Database::getDatabaseConn();
+        $stmt = $pdo->prepare($sql);
+
+        if ($status) {
+            $stmt->bindValue(':status', $status);
+        }
+
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $foods = [];
+        foreach ($rows as $row) {
+            $foods[] = new static($row);
+        }
+
+        return $foods;
+    }
 }
