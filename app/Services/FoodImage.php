@@ -93,9 +93,11 @@ class FoodImage
 
         $this->removeImage();
 
+        $destination = $this->getAbsoluteDestinationPath();
+
         $resp = move_uploaded_file(
             $this->getTmpFilePath(),
-            $this->getAbsoluteDestinationPath()
+            $destination
         );
 
         if (!$resp) {
@@ -105,7 +107,47 @@ class FoodImage
             );
         }
 
+        $this->createThumbnail($destination);
+
         return true;
+    }
+
+    private function createThumbnail(string $sourcePath): void
+    {
+        $info = getimagesize($sourcePath);
+        $mimeType = $info['mime'];
+
+        $image = match ($mimeType) {
+            'image/jpeg' => imagecreatefromjpeg($sourcePath),
+            'image/png'  => imagecreatefrompng($sourcePath),
+            default      => null,
+        };
+
+        if (!$image) {
+            return;
+        }
+
+        $maxWidth = 300;
+        $originalWidth = imagesx($image);
+        $originalHeight = imagesy($image);
+
+        $ratio = $maxWidth / $originalWidth;
+        $newWidth = $maxWidth;
+        $newHeight = (int) ($originalHeight * $ratio);
+
+        $thumbnail = imagecreatetruecolor($newWidth, $newHeight);
+        imagecopyresampled($thumbnail, $image, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight);
+
+        $thumbnailPath = $this->storeDir() . 'thumb_' . $this->getFileName();
+
+        match ($mimeType) {
+            'image/jpeg' => imagejpeg($thumbnail, $thumbnailPath, 80),
+            'image/png'  => imagepng($thumbnail, $thumbnailPath),
+            default      => null,
+        };
+
+        imagedestroy($image);
+        imagedestroy($thumbnail);
     }
 
     private function getTmpFilePath(): string
@@ -117,6 +159,11 @@ class FoodImage
     {
         if ($this->model->photo_url) {
             unlink($this->getAbsoluteSavedFilePath());
+
+            $thumbPath = $this->storeDir() . 'thumb_' . $this->model->photo_url;
+            if (file_exists($thumbPath)) {
+                unlink($thumbPath);
+            }
         }
     }
 
@@ -152,5 +199,18 @@ class FoodImage
     private function getAbsoluteSavedFilePath(): string
     {
         return Constants::rootPath()->join('public' . $this->baseDir())->join($this->model->photo_url);
+    }
+
+    public function thumbnailPath(): string
+    {
+        if ($this->model->photo_url) {
+            $thumbPath = $this->storeDir() . 'thumb_' . $this->model->photo_url;
+            if (file_exists($thumbPath)) {
+                $hash = md5_file($thumbPath);
+                return $this->baseDir() . 'thumb_' . $this->model->photo_url . '?' . $hash;
+            }
+        }
+
+        return '/assets/images/defaults/food.svg';
     }
 }

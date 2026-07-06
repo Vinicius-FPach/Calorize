@@ -107,18 +107,23 @@
 <div class="bg-white border border-gray-200 rounded-lg p-6">
     <h2 class="text-base font-semibold text-gray-800 mb-4">Adicionar alimento</h2>
 
-    <form action="<?= route('meals.show', ['diet_id' => $diet->id, 'meal_id' => $meal->id]) ?>" method="GET" class="mb-4">
-        <input type="text" name="search" value="<?= $search ?>" placeholder="Buscar alimento pelo nome..."
+    <div class="mb-4 flex gap-2">
+        <input type="text" id="food-search"
+            value="<?= $search ?>"
+            placeholder="Buscar alimento pelo nome..."
+            data-search-url="<?= route('meals.foods.search', ['diet_id' => $diet->id, 'meal_id' => $meal->id]) ?>"
             class="w-1/2 bg-[#f6f6f6] border border-gray-200 rounded-md px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary">
-        <button type="submit" class="px-4 py-2 bg-gray-100 text-gray-700 font-black text-sm rounded-md hover:bg-gray-200 transition-colors">
+        <button class="px-4 py-2 bg-gray-100 text-gray-700 font-black text-sm rounded-md hover:bg-gray-200 transition-colors">
             <i class="bi bi-search"></i>
         </button>
-    </form>
+    </div>
 
-    <?php if (empty($availableFoods)) : ?>
-        <p class="text-sm text-gray-400">Nenhum alimento encontrado.</p>
-    <?php else : ?>
-        <ul class="divide-y divide-gray-100">
+    <ul id="food-list"
+        data-add-url="<?= route('meals.foods.add', ['diet_id' => $diet->id, 'meal_id' => $meal->id]) ?>"
+        class="divide-y divide-gray-100 min-h-[609px]">
+        <?php if (empty($availableFoods)) : ?>
+            <p class="text-sm text-gray-400">Nenhum alimento encontrado.</p>
+        <?php else : ?>
             <?php foreach ($availableFoods as $food) : ?>
                 <li class="flex items-center justify-between py-3 gap-4">
                     <div>
@@ -136,6 +141,6 @@
                     </form>
                 </li>
             <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
+        <?php endif; ?>
+    </ul>
 </div>

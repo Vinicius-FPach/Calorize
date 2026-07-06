@@ -145,6 +145,7 @@ class MealsController extends Controller
             FlashMessage::danger(
                 $foodMeal->errors('quantity')
                     ?? $foodMeal->errors('food_id')
+                    ?? $foodMeal->errors('meal_id')
                     ?? 'Não foi possível adicionar o alimento.'
             );
         }
@@ -176,5 +177,21 @@ class MealsController extends Controller
 
         FlashMessage::success('Alimento removido da refeição!');
         $this->redirectTo(route('meals.show', ['diet_id' => $diet->id, 'meal_id' => $meal->id]));
+    }
+
+    public function searchFoods(Request $request): void
+    {
+        $params = $request->getParams();
+        $search = $params['search'] ?? '';
+
+        $foods = Food::searchAvailable($this->current_user->id, $search);
+
+        header('Content-Type: application/json');
+        echo json_encode(array_map(fn($food) => [
+            'id'   => $food->id,
+            'name' => $food->name,
+            'kcal' => $food->kcal,
+            'unit' => $food->unit,
+        ], $foods));
     }
 }

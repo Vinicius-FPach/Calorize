@@ -15,6 +15,10 @@ Route::post('/login', [AuthenticationsController::class, 'authenticate'])->name(
 
 Route::middleware('admin')->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admin/foods/{uuid}', [AdminController::class, 'showFood'])->name('admin.foods.show');
+
+    Route::put('/admin/foods/{uuid}/approve', [AdminController::class, 'approveFood'])->name('admin.foods.approve');
+    Route::put('/admin/foods/{uuid}/reject', [AdminController::class, 'rejectFood'])->name('admin.foods.reject');
 });
 
 Route::middleware('auth')->group(function () {
@@ -66,6 +70,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/diets/{diet_id}/meals/{meal_id}', [MealsController::class, 'destroy'])->name('meals.destroy');
 
     Route::post('/diets/{diet_id}/meals/{meal_id}/foods', [MealsController::class, 'addFood'])->name('meals.foods.add');
+
+    Route::get('/diets/{diet_id}/meals/{meal_id}/foods/search', [
+        MealsController::class, 'searchFoods'
+    ])->name('meals.foods.search');
 
     Route::delete('/food_meal/{food_meal_id}', [MealsController::class, 'removeFood'])->name('food_meal.destroy');
 });
