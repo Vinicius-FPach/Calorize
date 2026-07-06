@@ -221,4 +221,49 @@ class MealAccessTest extends TestCase
 
         $this->assertNotNull(FoodMeal::findById($foodMeal->id));
     }
+
+    public function test_meal_create_should_not_be_accessible_without_authentication(): void
+   {
+      $response = $this->client->post('/diets/1/meals', [
+         'form_params' => [
+               'meal' => [
+                  'name' => 'Almoço'
+               ]
+         ]
+      ]);
+
+      $this->assertEquals(302, $response->getStatusCode());
+      $this->assertEquals('/login', $response->getHeaderLine('Location'));
+   }
+
+   public function test_meal_destroy_should_not_be_accessible_without_authentication(): void
+   {
+      $response = $this->client->delete('/diets/1/meals/1');
+
+      $this->assertEquals(302, $response->getStatusCode());
+      $this->assertEquals('/login', $response->getHeaderLine('Location'));
+   }
+
+   public function test_food_add_should_not_be_accessible_without_authentication(): void
+   {
+      $response = $this->client->post('/diets/1/meals/1/foods', [
+         'form_params' => [
+               'food_meal' => [
+                  'food_id' => 1,
+                  'quantity' => 100
+               ]
+         ]
+      ]);
+
+      $this->assertEquals(302, $response->getStatusCode());
+      $this->assertEquals('/login', $response->getHeaderLine('Location'));
+   }
+
+   public function test_food_search_should_not_be_accessible_without_authentication(): void
+   {
+      $response = $this->client->get('/diets/1/meals/1/foods/search?search=Ban');
+
+      $this->assertEquals(302, $response->getStatusCode());
+      $this->assertEquals('/login', $response->getHeaderLine('Location'));
+   }
 }
