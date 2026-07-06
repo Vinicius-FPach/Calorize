@@ -210,19 +210,19 @@ class MealCest extends BaseAcceptanceCest
         $page->dontSee("Banana", ".meal-items");
     }
     public function searchFoodsWithAjax(AcceptanceTester $page): void
-   {
-      $user = $this->loginUser($page);
+    {
+        $user = $this->loginUser($page);
 
-      $diet = Diet::createFromProfile($user, 'Bulking');
-      $diet->save();
+        $diet = Diet::createFromProfile($user, 'Bulking');
+        $diet->save();
 
-      $meal = new Meal([
+        $meal = new Meal([
          'diet_id' => $diet->id,
          'name' => 'Almoço'
-      ]);
-      $meal->save();
+        ]);
+        $meal->save();
 
-      (new Food([
+        (new Food([
          'user_id' => $user->id,
          'name' => 'Ponkan',
          'kcal' => 89,
@@ -231,9 +231,9 @@ class MealCest extends BaseAcceptanceCest
          'protein' => 1.1,
          'unit' => 'g',
          'category' => 'Fruta'
-      ]))->save();
+        ]))->save();
 
-      (new Food([
+        (new Food([
          'user_id' => $user->id,
          'name' => 'Arroz',
          'kcal' => 130,
@@ -242,15 +242,15 @@ class MealCest extends BaseAcceptanceCest
          'protein' => 2.7,
          'unit' => 'g',
          'category' => 'Grãos'
-      ]))->save();
+        ]))->save();
 
-      $page->amOnPage("/diets/{$diet->id}/meals/{$meal->id}");
+        $page->amOnPage("/diets/{$diet->id}/meals/{$meal->id}");
 
-      $page->fillField('#food-search', 'Po');
+        $page->fillField('#food-search', 'Po');
 
-      $page->wait(1);
+        $page->wait(1);
 
-      $page->see('Ponkan', '#food-list');
-      $page->dontSee('Arroz', '#food-list');
-   }
+        $page->see('Ponkan', '#food-list');
+        $page->dontSee('Arroz', '#food-list');
+    }
 }
